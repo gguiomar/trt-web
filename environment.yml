@@ -1,4 +1,4 @@
-name: trt-web
+name: vst
 channels:
   - conda-forge
   - defaults

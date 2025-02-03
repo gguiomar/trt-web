@@ -3,12 +3,59 @@ import json
 import os
 from datetime import datetime
 from flask import Flask, render_template, request, session, redirect, url_for
+import uuid
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Replace with a secure key
+app.secret_key = 'your_secret_key_here'
+
+class GameLogger:
+    def __init__(self, base_dir='logs'):
+        self.base_dir = base_dir
+        os.makedirs(base_dir, exist_ok=True)
+    
+    def create_game_log(self):
+        """Create a new game log file and return its ID"""
+        game_id = str(uuid.uuid4())
+        timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+        filename = f"game_{game_id}_{timestamp}.json"
+        
+        # Initialize log file with metadata
+        log_data = {
+            'game_id': game_id,
+            'start_time': datetime.utcnow().isoformat(),
+            'choices': []
+        }
+        
+        filepath = os.path.join(self.base_dir, filename)
+        with open(filepath, 'w') as f:
+            json.dump(log_data, f, indent=2)
+        
+        return game_id, filepath
+    
+    def log_choice(self, filepath, choice_data):
+        """Log a choice to the specific game's log file"""
+        try:
+            # Read existing log
+            with open(filepath, 'r') as f:
+                log_data = json.load(f)
+            
+            # Add new choice with timestamp
+            choice_data['timestamp'] = datetime.utcnow().isoformat()
+            log_data['choices'].append(choice_data)
+            
+            # Write updated log
+            with open(filepath, 'w') as f:
+                json.dump(log_data, f, indent=2)
+                
+            return True
+        except Exception as e:
+            print(f"Error logging choice: {e}")
+            return False
+
+# Initialize the game logger
+game_logger = GameLogger()
 
 # --- VSTtask Class ---
-
 class VSTtask:
     def __init__(self, n_rounds: int = 5, n_quadrants: int = 4, n_queues: int = 1):
         if not 2 <= n_quadrants <= 4:
@@ -30,7 +77,7 @@ class VSTtask:
         self.quadrants = list(range(n_quadrants))
         self.biased_quadrant = random.choice(self.quadrants)
         self.rounds = self._generate_rounds()
-        
+
     def _get_color(self, quadrant: int) -> str:
         if quadrant == self.biased_quadrant:
             return 'RED' if random.random() < 0.9 else 'GREEN'
@@ -48,12 +95,10 @@ class VSTtask:
                             'color': self._get_color(q),
                             'quadrant': q
                         })
-                # Duration is no longer needed since queues won't disappear
                 rounds.append({'queues': round_queues})
             if self._validate_rounds([r['queues'] for r in rounds]):
                 return rounds
 
-        
     def _validate_rounds(self, rounds):
         color_counts = {q: {'RED': 0, 'GREEN': 0} for q in self.quadrants}
         for round_queues in rounds:
@@ -87,39 +132,6 @@ class VSTtask:
             f"After {self.n_rounds} rounds, identify the biased quadrant.<br>"
             "Correct: +100 points, Wrong: -100 points."
         )
-    
-    def process_choice(self, choice: str, round_queues) -> str:
-        for queue in round_queues:
-            if queue['name'] == choice:
-                return queue['color']
-        return None
-
-# --- Logging Route ---
-
-@app.route('/log_choice', methods=['POST'])
-def log_choice():
-    # Expecting JSON payload with { round: <int>, cue: {name: <str>, color: <str>} }
-    data = request.get_json()
-    if data is None:
-        return "No data provided", 400
-    
-    # Add server-side timestamp
-    data["timestamp"] = datetime.utcnow().isoformat() + "Z"
-    
-    # Use a session-specific log file. If not set, create one.
-    log_filename = session.get("log_filename")
-    if not log_filename:
-        # Create a unique filename
-        log_filename = f"logs/choice_{datetime.utcnow().timestamp()}_{random.randint(1000,9999)}.json"
-        session["log_filename"] = log_filename
-    os.makedirs("logs", exist_ok=True)
-    
-    # Append the log as a JSON line.
-    with open(log_filename, "a") as f:
-        f.write(json.dumps(data) + "\n")
-    return "OK", 200
-
-# --- Flask Routes ---
 
 @app.route('/')
 def index():
@@ -127,22 +139,50 @@ def index():
 
 @app.route('/start')
 def start():
-    # Set game parameters (adjust as desired):
+    # Create new game log file
+    game_id, log_filepath = game_logger.create_game_log()
+    
+    # Store game ID and log filepath in session
+    session['game_id'] = game_id
+    session['log_filepath'] = log_filepath
+    
+    # Initialize game as before
     n_rounds = 5
     n_quadrants = 4
     n_queues = 1
     task = VSTtask(n_rounds=n_rounds, n_quadrants=n_quadrants, n_queues=n_queues)
+    
     session['game'] = {
-         'rounds': task.rounds,
-         'biased_quadrant': task.biased_quadrant,
-         'n_rounds': task.n_rounds,
-         'n_quadrants': task.n_quadrants,
-         'current_round': 0,
-         'task_description': task.get_task_description()
+        'rounds': task.rounds,
+        'biased_quadrant': task.biased_quadrant,
+        'n_rounds': task.n_rounds,
+        'n_quadrants': task.n_quadrants,
+        'current_round': 0,
+        'task_description': task.get_task_description()
     }
-    # Initialize an empty log list (if you prefer in-session logging)
-    session['choices_log'] = []
+    
     return redirect(url_for('round_page', round_number=0))
+
+@app.route('/log_choice', methods=['POST'])
+def log_choice():
+    data = request.get_json()
+    if data is None:
+        return "No data provided", 400
+    
+    # Get the log filepath from session
+    log_filepath = session.get('log_filepath')
+    if not log_filepath:
+        return "No active game session", 400
+    
+    # Add game ID to the log data
+    data['game_id'] = session.get('game_id')
+    
+    # Log the choice
+    success = game_logger.log_choice(log_filepath, data)
+    if not success:
+        return "Logging failed", 500
+    
+    return "OK", 200
 
 @app.route('/round/<int:round_number>', methods=['GET'])
 def round_page(round_number):
@@ -159,15 +199,31 @@ def final():
     game = session.get('game')
     if not game:
         return redirect(url_for('index'))
+    
     if request.method == 'POST':
         try:
             chosen = int(request.form.get('biased_quadrant'))
         except (ValueError, TypeError):
             chosen = -1
+            
         correct = (chosen == game['biased_quadrant'])
         score = 100 if correct else -100
-        return render_template('result.html', chosen=chosen, correct=correct, score=score,
-                               biased=game['biased_quadrant'])
+        
+        # Log the final result
+        log_filepath = session.get('log_filepath')
+        if log_filepath:
+            result_data = {
+                'type': 'final_choice',
+                'chosen_quadrant': chosen,
+                'correct': correct,
+                'score': score,
+                'biased_quadrant': game['biased_quadrant']
+            }
+            game_logger.log_choice(log_filepath, result_data)
+        
+        return render_template('result.html', chosen=chosen, correct=correct, 
+                             score=score, biased=game['biased_quadrant'])
+                             
     return render_template('final.html', n_quadrants=game['n_quadrants'])
 
 if __name__ == '__main__':

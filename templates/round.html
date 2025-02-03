@@ -1,24 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Round {{ round_number + 1 }}</h2>
-<div id="cues" class="queues-{{ round_data.queues|length }}">
-    {% for cue in round_data.queues %}
-        <button class="cue-button" data-color="{{ cue.color }}">{{ cue.name }}</button>
-    {% endfor %}
+<div class="game-container">
+    <h2>Round {{ round_number + 1 }}</h2>
+    <div id="cues" class="queues-{{ round_data.queues|length }}">
+        {% for cue in round_data.queues %}
+            <button class="cue-button" 
+                    data-color="{{ cue.color }}" 
+                    data-quadrant="{{ cue.quadrant }}">
+                {{ cue.name }}
+            </button>
+        {% endfor %}
+    </div>
 </div>
 
 <script>
     var roundNumber = {{ round_number }};
     
-    function logChoice(cueName, cueColor, roundNumber) {
+    function logChoice(button, cueName, cueColor) {
+        const quadrant = button.getAttribute('data-quadrant');
+        
+        const logData = {
+            round: roundNumber,
+            quadrant: parseInt(quadrant),
+            choice: cueName,
+            color: cueColor,
+            client_timestamp: new Date().toISOString()
+        };
+
         fetch('/log_choice', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                round: roundNumber,
-                cue: { name: cueName, color: cueColor }
-            })
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-Session-ID': '{{ session.get("game_id", "") }}'
+            },
+            body: JSON.stringify(logData)
         })
         .then(response => {
             if (!response.ok) {
@@ -37,14 +53,15 @@
         button.addEventListener('click', function() {
             if (this.getAttribute('data-clicked') === 'true') return;
             
-            let color = button.getAttribute('data-color');
-            let cueName = button.textContent.trim();
-            button.style.backgroundColor = color.toLowerCase();
-            button.textContent += " (" + color + ")";
-            button.setAttribute('data-clicked', 'true');
-            logChoice(cueName, color, roundNumber);
+            let color = this.getAttribute('data-color');
+            let cueName = this.textContent.trim();
             
-            // Wait a short moment before moving to next round
+            this.style.backgroundColor = color.toLowerCase();
+            this.textContent += " (" + color + ")";
+            this.setAttribute('data-clicked', 'true');
+            
+            logChoice(this, cueName, color);
+            
             setTimeout(goNext, 500);
         });
     });

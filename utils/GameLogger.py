@@ -16,35 +16,28 @@ class GameLogger:
             raise
     
     def create_game_log(self):
-        """Create a new game log file with proper permissions"""
+        """Create a new game log file with same approach as choice logs"""
         try:
             game_id = str(uuid.uuid4())
-            timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
-            filename = f"game_{game_id}_{timestamp}.json"
+            timestamp = datetime.utcnow().timestamp()
+            filename = f"game_{timestamp}_{game_id}.json"
             filepath = os.path.join(LOGS_DIR, filename)
             
-            debug_log(f"Creating game log: {filepath}")
-            
-            # Initialize log file with metadata
+            # Initialize log file - keep it simple like choice logs
             log_data = {
                 'game_id': game_id,
-                'start_time': datetime.utcnow().isoformat(),
+                'timestamp': datetime.utcnow().isoformat(),
                 'choices': []
             }
             
-            # Write with proper permissions
+            # Write using the same approach as choice logs
             with open(filepath, 'w') as f:
-                json.dump(log_data, f, indent=2)
-            os.chmod(filepath, 0o664)
-            
-            debug_log(f"Game log created successfully: {filepath}")
-            debug_log(f"File exists: {os.path.exists(filepath)}")
-            debug_log(f"Permissions: {oct(os.stat(filepath).st_mode)[-3:]}")
-            
+                json.dump(log_data, f)
+                
             return game_id, filepath
-            
+                
         except Exception as e:
-            debug_log(f"Error creating game log: {str(e)}\n{traceback.format_exc()}")
+            print(f"Error creating game log: {str(e)}", flush=True)
             raise
 
     def log_choice(self, filepath, choice_data):

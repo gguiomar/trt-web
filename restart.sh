@@ -36,10 +36,10 @@ sleep 2
 
 # Start Flask application with full path and verbose output
 echo "Starting Flask application..."
-python "$SCRIPT_DIR/app.py" &
+python "app.py" &
 
 # Optional: Run diagnostic script to verify logging
-python "$SCRIPT_DIR/utils/logging_diagnostic.py"
+python "$/utils/logging_diagnostic.py"
 
 echo "Server restart complete!"
 echo "To check server status, use: ps aux | grep 'python app.py'"

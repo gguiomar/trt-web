@@ -193,34 +193,30 @@ def start():
 
 @app.route('/log_choice', methods=['POST'])
 def log_choice():
-    debug_log("Processing log_choice request")
     try:
-        # Run session test at start of log_choice
-        test_results = test_session_state()
-        debug_log(f"Log choice session test: {test_results}")
-        
         data = request.get_json()
         if data is None:
-            debug_log("No data provided in request")
             return "No data provided", 400
+            
+        # Test file write in same location as game logs
+        test_path = os.path.join(LOGS_DIR, 'test_write.txt')
+        with open(test_path, 'a') as f:
+            f.write(f"Test write at {datetime.utcnow()}\n")
         
+        # Now try the regular game logging
         log_filepath = session.get('log_filepath')
         if not log_filepath:
-            debug_log("No log_filepath in session")
-            debug_log(f"Current session: {dict(session)}")
             return "No active game session", 400
         
         data['game_id'] = session.get('game_id')
-        debug_log(f"Attempting to log choice with filepath: {log_filepath}")
-        
         success = game_logger.log_choice(log_filepath, data)
+        
         if not success:
-            debug_log("Failed to log choice")
             return "Logging failed", 500
         
         return "OK", 200
     except Exception as e:
-        debug_log(f"Error in log_choice route: {str(e)}\n{traceback.format_exc()}")
+        print(f"Error: {str(e)}")  # Print to server logs
         return str(e), 500
 
 @app.route('/round/<int:round_number>', methods=['GET'])

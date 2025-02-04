@@ -25,6 +25,64 @@ Session(app)
 # Initialize the game logger
 game_logger = GameLogger()
 
+# Add this function to your app.py
+def test_session_state():
+    """Test session functionality and return diagnostic info"""
+    test_results = {
+        "session_exists": False,
+        "session_dir_exists": False,
+        "session_dir_writable": False,
+        "session_file_details": None,
+        "current_session_data": None,
+        "game_log_details": None
+    }
+    
+    # Test 1: Check if session exists and has data
+    test_results["session_exists"] = bool(session)
+    if session:
+        test_results["current_session_data"] = dict(session)
+        debug_log(f"Current session data: {dict(session)}")
+    
+    # Test 2: Check session directory
+    test_results["session_dir_exists"] = os.path.exists(SESSION_DIR)
+    if test_results["session_dir_exists"]:
+        try:
+            test_file = os.path.join(SESSION_DIR, "test_write")
+            with open(test_file, 'w') as f:
+                f.write("test")
+            os.remove(test_file)
+            test_results["session_dir_writable"] = True
+        except Exception as e:
+            debug_log(f"Session directory write test failed: {str(e)}")
+    
+    # Test 3: Check session files
+    if session.get('game_id'):
+        try:
+            session_files = [f for f in os.listdir(SESSION_DIR) if f.startswith('sess')]
+            test_results["session_file_details"] = {
+                "files_found": len(session_files),
+                "files": session_files
+            }
+        except Exception as e:
+            debug_log(f"Error listing session files: {str(e)}")
+        
+        # Test 4: Check game log file
+        log_filepath = session.get('log_filepath')
+        if log_filepath:
+            try:
+                test_results["game_log_details"] = {
+                    "exists": os.path.exists(log_filepath),
+                    "path": log_filepath,
+                    "permissions": oct(os.stat(log_filepath).st_mode)[-3:] if os.path.exists(log_filepath) else None,
+                    "directory_writable": os.access(os.path.dirname(log_filepath), os.W_OK)
+                }
+            except Exception as e:
+                debug_log(f"Error checking log file: {str(e)}")
+    
+    debug_log(f"Session test results: {test_results}")
+    return test_results
+
+
 @app.route('/')
 def index():
     debug_log("Accessing index page")
@@ -95,8 +153,9 @@ def test_session():
 def start():
     debug_log("Starting new game")
     try:
-        # Log initial session state
-        debug_log(f"Initial session state: {dict(session)}")
+        # Run session test before starting
+        test_results = test_session_state()
+        debug_log(f"Pre-game session test: {test_results}")
         
         # Create new game log file
         game_id, log_filepath = game_logger.create_game_log()
@@ -105,8 +164,11 @@ def start():
         # Store absolute filepath in session
         session['game_id'] = game_id
         session['log_filepath'] = log_filepath
-        session.modified = True  # Explicitly mark session as modified
-        debug_log(f"Session after storing game info: {dict(session)}")
+        session.modified = True
+        
+        # Run session test after storing game info
+        test_results = test_session_state()
+        debug_log(f"Post-game creation session test: {test_results}")
         
         # Initialize game
         task = VSTtask(n_rounds=5, n_quadrants=4, n_queues=1)
@@ -118,9 +180,12 @@ def start():
             'current_round': 0,
             'task_description': task.get_task_description()
         }
-        session.modified = True  # Mark as modified again after game initialization
+        session.modified = True
         
-        debug_log(f"Final session state before redirect: {dict(session)}")
+        # Final session test
+        test_results = test_session_state()
+        debug_log(f"Final session test before redirect: {test_results}")
+        
         return redirect(url_for('round_page', round_number=0))
     except Exception as e:
         debug_log(f"Error in start route: {str(e)}\n{traceback.format_exc()}")
@@ -130,6 +195,10 @@ def start():
 def log_choice():
     debug_log("Processing log_choice request")
     try:
+        # Run session test at start of log_choice
+        test_results = test_session_state()
+        debug_log(f"Log choice session test: {test_results}")
+        
         data = request.get_json()
         if data is None:
             debug_log("No data provided in request")

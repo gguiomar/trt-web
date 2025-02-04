@@ -42,7 +42,7 @@ fi
 if command_exists "conda"; then
     echo "Activating conda environment..."
     source ~/miniconda3/etc/profile.d/conda.sh || source ~/anaconda3/etc/profile.d/conda.sh
-    conda activate trt-web || echo "Warning: Could not activate conda environment"
+    conda activate vst || echo "Warning: Could not activate conda environment"
 fi
 
 # Start Flask application

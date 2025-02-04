@@ -4,7 +4,7 @@ import traceback
 import os
 
 # Import our custom modules
-from utils.config import SESSION_DIR, debug_log
+from utils.config import SESSION_DIR, debug_log, LOGS_DIR
 from utils.GameLogger import GameLogger
 from utils.VSTtask import VSTtask
 

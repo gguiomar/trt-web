@@ -7,36 +7,34 @@ from .config import LOGS_DIR, debug_log
 
 class GameLogger:
     def __init__(self):
-        debug_log("Initializing GameLogger")
-        try:
-            os.makedirs(LOGS_DIR, mode=0o775, exist_ok=True)
-            debug_log(f"GameLogger directory verified: {LOGS_DIR}")
-        except Exception as e:
-            debug_log(f"Error in GameLogger init: {str(e)}\n{traceback.format_exc()}")
-            raise
-    
+        # Use same directory creation pattern
+        self.logs_dir = os.path.join(os.path.dirname(__file__), 'logs')
+        os.makedirs(self.logs_dir, exist_ok=True)
+        print(f"GameLogger initialized. Logs directory: {self.logs_dir}", flush=True)
+
     def create_game_log(self):
-        """Create a new game log file with proper JSON structure"""
+        """Create a new game log file using proven pattern"""
         try:
+            # Generate unique filename
             game_id = str(uuid.uuid4())
-            timestamp = datetime.utcnow()
             filename = f"game_{game_id}.json"
-            filepath = os.path.join(LOGS_DIR, filename)
+            filepath = os.path.join(self.logs_dir, filename)
             
-            # Create initial game structure
+            # Initial game structure
             game_data = {
                 'game_id': game_id,
-                'start_time': timestamp.isoformat() + "Z",
+                'start_time': datetime.utcnow().isoformat(),
                 'choices': [],
                 'metadata': {
-                    'file_created': timestamp.isoformat() + "Z"
+                    'file_created': datetime.utcnow().isoformat()
                 }
             }
             
-            # Write the initial structure atomically
+            # Use the working file writing pattern
             with open(filepath, 'w') as f:
                 json.dump(game_data, f, indent=2)
                 
+            print(f"Created game log: {filepath}", flush=True)
             return game_id, filepath
                 
         except Exception as e:
@@ -44,7 +42,7 @@ class GameLogger:
             raise
 
     def log_choice(self, filepath, choice_data):
-        """Log a choice by updating the game's JSON file"""
+        """Log a choice to the game file"""
         try:
             # Read current game data
             with open(filepath, 'r') as f:
@@ -52,21 +50,18 @@ class GameLogger:
             
             # Add timestamp if not present
             if 'timestamp' not in choice_data:
-                choice_data['timestamp'] = datetime.utcnow().isoformat() + "Z"
+                choice_data['timestamp'] = datetime.utcnow().isoformat()
             
             # Append new choice
             game_data['choices'].append(choice_data)
             
-            # Write back entire file atomically
+            # Write updated data
             with open(filepath, 'w') as f:
                 json.dump(game_data, f, indent=2)
                 
+            print(f"Logged choice to: {filepath}", flush=True)
             return True
                 
         except Exception as e:
             print(f"Error logging choice: {str(e)}", flush=True)
             return False
-
-
-
-

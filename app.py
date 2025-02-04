@@ -24,6 +24,100 @@ Session(app)
 # Initialize the game logger
 game_logger = GameLogger()
 
+
+# Add these imports to your app.py
+from flask import jsonify
+import os
+
+# Add this new route to test session functionality
+@app.route('/test_session')
+def test_session():
+    debug_log("Testing session functionality")
+    
+    # Test 1: Session Creation
+    test_results = {
+        "session_exists": False,
+        "session_dir_exists": False,
+        "session_dir_writable": False,
+        "session_file_details": None,
+        "current_session_data": None,
+        "game_log_details": None
+    }
+    
+    # Check if session exists
+    if session:
+        test_results["session_exists"] = True
+        test_results["current_session_data"] = dict(session)
+    
+    # Check session directory
+    if os.path.exists(SESSION_DIR):
+        test_results["session_dir_exists"] = True
+        try:
+            test_file = os.path.join(SESSION_DIR, "test_write")
+            with open(test_file, 'w') as f:
+                f.write("test")
+            os.remove(test_file)
+            test_results["session_dir_writable"] = True
+        except Exception as e:
+            debug_log(f"Session directory write test failed: {str(e)}")
+    
+    # Check session file if game_id exists
+    if session.get('game_id'):
+        session_files = [f for f in os.listdir(SESSION_DIR) if f.startswith('sess')]
+        test_results["session_file_details"] = {
+            "files_found": len(session_files),
+            "files": session_files
+        }
+        
+        # Check game log file
+        log_filepath = session.get('log_filepath')
+        if log_filepath:
+            test_results["game_log_details"] = {
+                "exists": os.path.exists(log_filepath),
+                "path": log_filepath,
+                "permissions": oct(os.stat(log_filepath).st_mode)[-3:] if os.path.exists(log_filepath) else None
+            }
+    
+    debug_log(f"Session test results: {test_results}")
+    return jsonify(test_results)
+
+# Add this decorator to the start route to log more session details
+@app.route('/start')
+def start():
+    debug_log("Starting new game")
+    try:
+        # Log initial session state
+        debug_log(f"Initial session state: {dict(session)}")
+        
+        # Create new game log file
+        game_id, log_filepath = game_logger.create_game_log()
+        debug_log(f"Created game log - ID: {game_id}, Path: {log_filepath}")
+        
+        # Store and verify session data
+        session['game_id'] = game_id
+        session['log_filepath'] = log_filepath
+        session.modified = True  # Explicitly mark session as modified
+        debug_log(f"Updated session state: {dict(session)}")
+        
+        # Initialize game
+        task = VSTtask(n_rounds=5, n_quadrants=4, n_queues=1)
+        session['game'] = {
+            'rounds': task.rounds,
+            'biased_quadrant': task.biased_quadrant,
+            'n_rounds': task.n_rounds,
+            'n_quadrants': task.n_quadrants,
+            'current_round': 0,
+            'task_description': task.get_task_description()
+        }
+        session.modified = True  # Mark as modified again after game initialization
+        
+        debug_log(f"Final session state before redirect: {dict(session)}")
+        return redirect(url_for('round_page', round_number=0))
+    except Exception as e:
+        debug_log(f"Error in start route: {str(e)}\n{traceback.format_exc()}")
+        raise
+
+
 @app.route('/')
 def index():
     debug_log("Accessing index page")

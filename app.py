@@ -151,24 +151,17 @@ def test_session():
 
 @app.route('/start')
 def start():
-    debug_log("Starting new game")
     try:
-        # Run session test before starting
-        test_results = test_session_state()
-        debug_log(f"Pre-game session test: {test_results}")
-        
         # Create new game log file
         game_id, log_filepath = game_logger.create_game_log()
-        debug_log(f"Created game log - ID: {game_id}, Path: {log_filepath}")
         
         # Store absolute filepath in session
         session['game_id'] = game_id
         session['log_filepath'] = log_filepath
         session.modified = True
         
-        # Run session test after storing game info
-        test_results = test_session_state()
-        debug_log(f"Post-game creation session test: {test_results}")
+        # Add this debug print
+        print(f"Session after setting game info: {dict(session)}", flush=True)
         
         # Initialize game
         task = VSTtask(n_rounds=5, n_quadrants=4, n_queues=1)
@@ -180,15 +173,13 @@ def start():
             'current_round': 0,
             'task_description': task.get_task_description()
         }
-        session.modified = True
         
-        # Final session test
-        test_results = test_session_state()
-        debug_log(f"Final session test before redirect: {test_results}")
+        # Add another debug print
+        print(f"Session after setting game data: {dict(session)}", flush=True)
         
         return redirect(url_for('round_page', round_number=0))
     except Exception as e:
-        debug_log(f"Error in start route: {str(e)}\n{traceback.format_exc()}")
+        print(f"Error in start route: {str(e)}", flush=True)
         raise
 
 @app.route('/log_choice', methods=['POST'])

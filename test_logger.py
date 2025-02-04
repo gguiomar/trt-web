@@ -22,6 +22,15 @@ def index():
         <input type="text" name="message" placeholder="Enter a message">
         <button type="submit">Add Log Entry</button>
     </form>
+    <br>
+    <div id="logs">
+        <h2>Existing Logs:</h2>
+        <ul>
+        {% for log in logs %}
+            <li>{{ log }}</li>
+        {% endfor %}
+        </ul>
+    </div>
     '''
 
 @app.route('/create_log')
@@ -107,4 +116,5 @@ def after_request(response):
 
 if __name__ == '__main__':
     print(f"Test logs will be saved to: {LOGS_DIR}", flush=True)
-    app.run(debug=True)
+    # Changed host and port for remote access
+    app.run(host='0.0.0.0', port=8080, debug=True)

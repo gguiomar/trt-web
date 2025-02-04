@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
 import traceback
+import os
 
 # Import our custom modules
 from utils.config import SESSION_DIR, debug_log
@@ -24,17 +25,18 @@ Session(app)
 # Initialize the game logger
 game_logger = GameLogger()
 
+@app.route('/')
+def index():
+    debug_log("Accessing index page")
+    debug_log(f"Current session state: {dict(session)}")  # Add session logging
+    return render_template('index.html')
 
-# Add these imports to your app.py
-from flask import jsonify
-import os
-
-# Add this new route to test session functionality
 @app.route('/test_session')
 def test_session():
+    """Test route to diagnose session issues"""
     debug_log("Testing session functionality")
     
-    # Test 1: Session Creation
+    # Test results dictionary
     test_results = {
         "session_exists": False,
         "session_dir_exists": False,
@@ -44,14 +46,15 @@ def test_session():
         "game_log_details": None
     }
     
-    # Check if session exists
+    # Test 1: Check if session exists and has data
+    test_results["session_exists"] = bool(session)
     if session:
-        test_results["session_exists"] = True
         test_results["current_session_data"] = dict(session)
+        debug_log(f"Current session data: {dict(session)}")
     
-    # Check session directory
-    if os.path.exists(SESSION_DIR):
-        test_results["session_dir_exists"] = True
+    # Test 2: Check session directory
+    test_results["session_dir_exists"] = os.path.exists(SESSION_DIR)
+    if test_results["session_dir_exists"]:
         try:
             test_file = os.path.join(SESSION_DIR, "test_write")
             with open(test_file, 'w') as f:
@@ -61,27 +64,33 @@ def test_session():
         except Exception as e:
             debug_log(f"Session directory write test failed: {str(e)}")
     
-    # Check session file if game_id exists
+    # Test 3: Check session files
     if session.get('game_id'):
-        session_files = [f for f in os.listdir(SESSION_DIR) if f.startswith('sess')]
-        test_results["session_file_details"] = {
-            "files_found": len(session_files),
-            "files": session_files
-        }
+        try:
+            session_files = [f for f in os.listdir(SESSION_DIR) if f.startswith('sess')]
+            test_results["session_file_details"] = {
+                "files_found": len(session_files),
+                "files": session_files
+            }
+        except Exception as e:
+            debug_log(f"Error listing session files: {str(e)}")
         
-        # Check game log file
+        # Test 4: Check game log file
         log_filepath = session.get('log_filepath')
         if log_filepath:
-            test_results["game_log_details"] = {
-                "exists": os.path.exists(log_filepath),
-                "path": log_filepath,
-                "permissions": oct(os.stat(log_filepath).st_mode)[-3:] if os.path.exists(log_filepath) else None
-            }
+            try:
+                test_results["game_log_details"] = {
+                    "exists": os.path.exists(log_filepath),
+                    "path": log_filepath,
+                    "permissions": oct(os.stat(log_filepath).st_mode)[-3:] if os.path.exists(log_filepath) else None,
+                    "directory_writable": os.access(os.path.dirname(log_filepath), os.W_OK)
+                }
+            except Exception as e:
+                debug_log(f"Error checking log file: {str(e)}")
     
     debug_log(f"Session test results: {test_results}")
     return jsonify(test_results)
 
-# Add this decorator to the start route to log more session details
 @app.route('/start')
 def start():
     debug_log("Starting new game")
@@ -93,11 +102,11 @@ def start():
         game_id, log_filepath = game_logger.create_game_log()
         debug_log(f"Created game log - ID: {game_id}, Path: {log_filepath}")
         
-        # Store and verify session data
+        # Store absolute filepath in session
         session['game_id'] = game_id
         session['log_filepath'] = log_filepath
         session.modified = True  # Explicitly mark session as modified
-        debug_log(f"Updated session state: {dict(session)}")
+        debug_log(f"Session after storing game info: {dict(session)}")
         
         # Initialize game
         task = VSTtask(n_rounds=5, n_quadrants=4, n_queues=1)
@@ -112,42 +121,6 @@ def start():
         session.modified = True  # Mark as modified again after game initialization
         
         debug_log(f"Final session state before redirect: {dict(session)}")
-        return redirect(url_for('round_page', round_number=0))
-    except Exception as e:
-        debug_log(f"Error in start route: {str(e)}\n{traceback.format_exc()}")
-        raise
-
-
-@app.route('/')
-def index():
-    debug_log("Accessing index page")
-    return render_template('index.html')
-
-@app.route('/start')
-def start():
-    debug_log("Starting new game")
-    try:
-        # Create new game log file
-        game_id, log_filepath = game_logger.create_game_log()
-        debug_log(f"Created game log - ID: {game_id}, Path: {log_filepath}")
-        
-        # Store absolute filepath in session
-        session['game_id'] = game_id
-        session['log_filepath'] = log_filepath
-        debug_log("Stored game info in session")
-        
-        # Initialize game
-        task = VSTtask(n_rounds=5, n_quadrants=4, n_queues=1)
-        session['game'] = {
-            'rounds': task.rounds,
-            'biased_quadrant': task.biased_quadrant,
-            'n_rounds': task.n_rounds,
-            'n_quadrants': task.n_quadrants,
-            'current_round': 0,
-            'task_description': task.get_task_description()
-        }
-        
-        debug_log("Game initialized, redirecting to first round")
         return redirect(url_for('round_page', round_number=0))
     except Exception as e:
         debug_log(f"Error in start route: {str(e)}\n{traceback.format_exc()}")
@@ -188,7 +161,9 @@ def round_page(round_number):
         game = session.get('game')
         if not game:
             debug_log("No game in session")
+            debug_log(f"Current session: {dict(session)}")
             return redirect(url_for('index'))
+            
         if round_number >= game['n_rounds']:
             debug_log("Round number exceeds max rounds")
             return redirect(url_for('final'))
@@ -206,6 +181,7 @@ def final():
         game = session.get('game')
         if not game:
             debug_log("No game in session at final page")
+            debug_log(f"Current session: {dict(session)}")
             return redirect(url_for('index'))
         
         if request.method == 'POST':
@@ -233,6 +209,7 @@ def final():
                     debug_log("Failed to log final choice")
             else:
                 debug_log("No log_filepath in session for final choice")
+                debug_log(f"Current session: {dict(session)}")
             
             debug_log(f"Game completed - Chosen: {chosen}, Correct: {correct}, Score: {score}")
             return render_template('result.html', chosen=chosen, correct=correct, 

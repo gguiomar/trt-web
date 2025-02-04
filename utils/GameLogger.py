@@ -16,23 +16,26 @@ class GameLogger:
             raise
     
     def create_game_log(self):
-        """Create a new game log file with same approach as choice logs"""
+        """Create a new game log file with proper JSON structure"""
         try:
             game_id = str(uuid.uuid4())
-            timestamp = datetime.utcnow().timestamp()
-            filename = f"game_{timestamp}_{game_id}.json"
+            timestamp = datetime.utcnow()
+            filename = f"game_{game_id}.json"
             filepath = os.path.join(LOGS_DIR, filename)
             
-            # Initialize log file - keep it simple like choice logs
-            log_data = {
+            # Create initial game structure
+            game_data = {
                 'game_id': game_id,
-                'timestamp': datetime.utcnow().isoformat(),
-                'choices': []
+                'start_time': timestamp.isoformat() + "Z",
+                'choices': [],
+                'metadata': {
+                    'file_created': timestamp.isoformat() + "Z"
+                }
             }
             
-            # Write using the same approach as choice logs
+            # Write the initial structure atomically
             with open(filepath, 'w') as f:
-                json.dump(log_data, f)
+                json.dump(game_data, f, indent=2)
                 
             return game_id, filepath
                 
@@ -41,30 +44,29 @@ class GameLogger:
             raise
 
     def log_choice(self, filepath, choice_data):
-        """Log a choice with proper error handling"""
+        """Log a choice by updating the game's JSON file"""
         try:
-            debug_log(f"Attempting to log choice to: {filepath}")
-            
-            if not os.path.exists(filepath):
-                debug_log(f"Log file not found: {filepath}")
-                return False
-            
-            # Read existing log
+            # Read current game data
             with open(filepath, 'r') as f:
-                log_data = json.load(f)
+                game_data = json.load(f)
             
-            # Add new choice with timestamp
-            choice_data['timestamp'] = datetime.utcnow().isoformat()
-            log_data['choices'].append(choice_data)
+            # Add timestamp if not present
+            if 'timestamp' not in choice_data:
+                choice_data['timestamp'] = datetime.utcnow().isoformat() + "Z"
             
-            # Write updated log
+            # Append new choice
+            game_data['choices'].append(choice_data)
+            
+            # Write back entire file atomically
             with open(filepath, 'w') as f:
-                json.dump(log_data, f, indent=2)
-            os.chmod(filepath, 0o664)
-            
-            debug_log("Choice logged successfully")
+                json.dump(game_data, f, indent=2)
+                
             return True
-            
+                
         except Exception as e:
-            debug_log(f"Error logging choice: {str(e)}\n{traceback.format_exc()}")
+            print(f"Error logging choice: {str(e)}", flush=True)
             return False
+
+
+
+

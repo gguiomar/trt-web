@@ -1,0 +1,15 @@
+{
+  "game_id": "b200791d-73fb-4a5c-b2b7-98360342b7b1",
+  "start_time": "2025-02-04T12:31:29.142834",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 0,
+      "choice": "A",
+      "color": "RED",
+      "client_timestamp": "2025-02-04T12:31:29.998Z",
+      "game_id": "b200791d-73fb-4a5c-b2b7-98360342b7b1",
+      "timestamp": "2025-02-04T12:31:30.020122"
+    }
+  ]
+}

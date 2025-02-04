@@ -6,13 +6,24 @@ from datetime import datetime
 from flask import Flask, render_template, request, session, redirect, url_for
 import uuid
 import logging
+import stat
+
+
+#TODO :split GameLogger and VSTtask into different files, VSTtask should be outside of this repo
+
+# Set up base directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+
+# Ensure logs directory exists with correct permissions
+os.makedirs(LOGS_DIR, mode=0o775, exist_ok=True)
 
 # Set up logging
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('app.log'),
+        logging.FileHandler(os.path.join(BASE_DIR, 'app.log')),
         logging.StreamHandler(sys.stdout)
     ]
 )
@@ -23,14 +34,18 @@ app.secret_key = 'your_secret_key_here'
 
 class GameLogger:
     def __init__(self, base_dir='logs'):
-        self.base_dir = base_dir
+        self.base_dir = os.path.join(BASE_DIR, base_dir)
         try:
-            os.makedirs(base_dir, exist_ok=True)
-            logger.info(f"Game log directory initialized: {base_dir}")
+            # Create directory with specific permissions
+            os.makedirs(self.base_dir, mode=0o775, exist_ok=True)
+            logger.info(f"Game log directory initialized: {self.base_dir}")
+            
             # Test write permissions
-            test_file = os.path.join(base_dir, 'test.txt')
+            test_file = os.path.join(self.base_dir, 'test.txt')
             with open(test_file, 'w') as f:
                 f.write('test')
+            # Set file permissions to 664
+            os.chmod(test_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH)
             os.remove(test_file)
             logger.info("Write permissions verified for log directory")
         except Exception as e:
@@ -54,8 +69,12 @@ class GameLogger:
             filepath = os.path.join(self.base_dir, filename)
             logger.info(f"Creating new game log: {filepath}")
             
+            # Write file with specific permissions
             with open(filepath, 'w') as f:
                 json.dump(log_data, f, indent=2)
+            
+            # Set file permissions to 664
+            os.chmod(filepath, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH)
             
             # Verify the file was created
             if not os.path.exists(filepath):
@@ -66,7 +85,7 @@ class GameLogger:
         except Exception as e:
             logger.error(f"Error creating game log: {e}")
             raise
-    
+
     def log_choice(self, filepath, choice_data):
         """Log a choice to the specific game's log file"""
         try:
@@ -88,6 +107,9 @@ class GameLogger:
             with open(filepath, 'w') as f:
                 json.dump(log_data, f, indent=2)
             
+            # Ensure file permissions are maintained
+            os.chmod(filepath, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH)
+            
             logger.debug("Successfully logged choice")
             return True
         except Exception as e:
@@ -101,7 +123,6 @@ except Exception as e:
     logger.critical(f"Failed to initialize GameLogger: {e}")
     sys.exit(1)
 
-# --- VSTtask Class ---
 class VSTtask:
     def __init__(self, n_rounds: int = 5, n_quadrants: int = 4, n_queues: int = 1):
         try:
@@ -274,7 +295,7 @@ def log_choice():
         data['game_id'] = session.get('game_id')
         
         # Ensure the log directory exists
-        os.makedirs(os.path.dirname(log_filepath), exist_ok=True)
+        os.makedirs(os.path.dirname(log_filepath), mode=0o775, exist_ok=True)
         
         # Log the choice
         success = game_logger.log_choice(log_filepath, data)
@@ -350,15 +371,24 @@ def final():
         logger.error(f"Error in final route: {e}")
         raise
 
+
 if __name__ == '__main__':
-    # Ensure the log directory exists
-    os.makedirs('logs', exist_ok=True)
+    # Ensure the log directory exists with correct permissions
+    os.makedirs(LOGS_DIR, mode=0o775, exist_ok=True)
     
     # Set up the Flask logger to use our configuration
     for handler in app.logger.handlers:
         app.logger.removeHandler(handler)
-    app.logger.addHandler(logging.FileHandler('app.log'))
+    app.logger.addHandler(logging.FileHandler(os.path.join(BASE_DIR, 'app.log')))
     app.logger.addHandler(logging.StreamHandler(sys.stdout))
     app.logger.setLevel(logging.DEBUG)
+    
+    # Try to ensure app.log has correct permissions
+    try:
+        app_log_path = os.path.join(BASE_DIR, 'app.log')
+        if os.path.exists(app_log_path):
+            os.chmod(app_log_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH)
+    except Exception as e:
+        print(f"Warning: Could not set app.log permissions: {e}")
     
     app.run(debug=True)

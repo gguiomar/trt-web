@@ -85,6 +85,33 @@ def test_session_state():
     return test_results
 
 
+@app.route('/introduction')
+def introduction():
+    return render_template('introduction.html')
+
+@app.route('/play')
+def play():
+    debug_log("Accessing play page")
+    debug_log(f"Current session state: {dict(session)}")
+    return render_template('play.html')
+
+@app.route('/human-statistics')
+def human_statistics():
+    return render_template('human_statistics.html')
+
+@app.route('/llm-leaderboard')
+def llm_leaderboard():
+    return render_template('llm_leaderboard.html')
+
+@app.route('/research-notes')
+def research_notes():
+    return render_template('research_notes.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
 @app.route('/')
 def index():
     debug_log("Accessing index page")

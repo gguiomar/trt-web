@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-section">
+    <h1>Research Notes</h1>
+    
+    <div class="research-grid">
+        <div class="research-card">
+            <h2>Project Overview</h2>
+            <p>
+                This project explores human and AI performance in temporal pattern recognition tasks.
+                The research focuses on understanding how different agents process and identify statistical
+                patterns that emerge over time.
+            </p>
+        </div>
+
+        <div class="research-card">
+            <h2>Current Findings</h2>
+            <ul class="findings-list">
+                <li>Humans show consistent improvement over multiple attempts</li>
+                <li>LLMs demonstrate strong pattern recognition capabilities</li>
+                <li>Response time variations between humans and AI are significant</li>
+                <li>Statistical biases are detected with varying accuracy rates</li>
+            </ul>
+        </div>
+
+        <div class="research-card">
+            <h2>Methodology</h2>
+            <p>
+                The study employs a controlled experimental design where participants 
+                (both human and AI) are presented with sequences of colored cues across
+                multiple rounds. One quadrant is programmatically biased, and success is
+                measured by correct identification of this bias.
+            </p>
+        </div>
+
+        <div class="research-card">
+            <h2>Future Directions</h2>
+            <p>
+                Upcoming research will focus on:
+            </p>
+            <ul class="findings-list">
+                <li>Extended pattern complexity analysis</li>
+                <li>Cross-model comparative studies</li>
+                <li>Temporal reasoning benchmarks</li>
+                <li>Human-AI collaborative approaches</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="publications-section">
+        <h2>Related Publications</h2>
+        <div class="publications-list">
+            <div class="publication-item">
+                <h3>"Temporal Pattern Recognition in Human and AI Agents"</h3>
+                <p>Forthcoming in Cognitive Science Journal, 2024</p>
+            </div>
+            <div class="publication-item">
+                <h3>"Comparative Analysis of LLM Performance in Sequential Decision Tasks"</h3>
+                <p>Under Review, ArXiv preprint</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.content-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.research-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.research-card {
+    background: #2a2a2a;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.research-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.findings-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.findings-list li {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.findings-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--accent-blue);
+}
+
+.publications-section {
+    margin: 3rem 0;
+}
+
+.publications-section h2 {
+    text-align: left;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.publications-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.publication-item {
+    background: #2a2a2a;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.publication-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-blue);
+}
+
+.publication-item p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+</style>
+{% endblock %}

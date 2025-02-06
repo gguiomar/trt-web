@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-section">
+    <h1>Introduction to Temporal Reasoning Task</h1>
+    
+    <div class="text-section">
+        <h2>What is the Temporal Reasoning Task?</h2>
+        <p>
+            The Temporal Reasoning Task is a cognitive experiment designed to test how well participants can detect patterns
+            that emerge over time. It challenges both human players and language models to identify statistical biases
+            in color distributions across different spatial locations.
+        </p>
+    </div>
+
+    <div class="text-section">
+        <h2>How does it work?</h2>
+        <p>
+            In each game:
+            - You'll see multiple rounds with colored buttons
+            - One quadrant is biased towards showing a particular color
+            - Your task is to identify which quadrant has the bias
+            - The bias only becomes apparent over multiple rounds
+        </p>
+    </div>
+
+    <div class="text-section">
+        <h2>Ready to begin?</h2>
+        <p>
+            Try the task yourself and see how well you can detect temporal patterns.
+        </p>
+        <div class="button-container">
+            <a href="{{ url_for('play') }}" class="button">Start Playing</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.content-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.text-section {
+    margin-bottom: 3rem;
+}
+
+.text-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.text-section p {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 2rem;
+}
+</style>
+{% endblock %}

@@ -38,16 +38,16 @@ const GameLogger = () => {
   }, []);
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader className="text-lg font-bold">Game Logs</CardHeader>
+    <Card className="w-full max-w-2xl bg-gray-900 text-white">
+      <CardHeader className="text-lg font-bold border-b border-gray-700">Game Logs</CardHeader>
       <CardContent>
         <div className="h-64 overflow-y-auto">
           {logs.map((log, index) => (
-            <div key={index} className="mb-2 p-2 bg-gray-100 rounded">
-              <div className="text-sm text-gray-600">
+            <div key={index} className="mb-2 p-2 bg-gray-800 rounded">
+              <div className="text-sm text-gray-400">
                 {new Date(log.timestamp).toLocaleString()}
               </div>
-              <div>
+              <div className="text-gray-200">
                 Round: {log.round} | Quadrant: {log.quadrant} |
                 Choice: {log.choice} | Color: {log.color}
               </div>

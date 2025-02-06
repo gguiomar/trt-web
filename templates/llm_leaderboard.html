@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-section">
+    <h1>LLM Leaderboard</h1>
+    
+    <div class="leaderboard-container">
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Model</th>
+                    <th>Win Rate</th>
+                    <th>Games</th>
+                    <th>Avg Time</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Claude 3.5 Sonnet</td>
+                    <td>67.2%</td>
+                    <td>1,234</td>
+                    <td>1.2s</td>
+                    <td>2024-02-05</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>GPT-4</td>
+                    <td>65.8%</td>
+                    <td>1,156</td>
+                    <td>1.4s</td>
+                    <td>2024-02-05</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Llama 3</td>
+                    <td>63.5%</td>
+                    <td>982</td>
+                    <td>1.1s</td>
+                    <td>2024-02-05</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="comparison-section">
+        <h2>Performance Comparison</h2>
+        <div class="chart-container">
+            <!-- Placeholder for chart -->
+            <div style="width: 100%; height: 300px; background: #2a2a2a; border-radius: 8px; margin: 1rem 0;">
+                [Performance Comparison Chart]
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.content-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.leaderboard-container {
+    margin: 2rem 0;
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.leaderboard-table th {
+    background: #333;
+    font-weight: bold;
+}
+
+.leaderboard-table tr:hover {
+    background: #333;
+}
+
+.comparison-section {
+    margin: 3rem 0;
+}
+
+.comparison-section h2 {
+    text-align: left;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.chart-container {
+    margin: 2rem 0;
+}
+</style>
+{% endblock %}

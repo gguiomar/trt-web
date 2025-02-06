@@ -1,19 +1,26 @@
 #!/bin/bash
 
-# Change to script directory
-cd "$(dirname "$0")"
+echo "Starting server restart process..."
 
-# Create required directories
+# Set up directories 
 mkdir -p logs flask_session
+chmod 775 logs flask_session
 
-# Kill any existing Flask instances
-pkill -f "python app.py"
+# Activate conda environment (if used)
+if command -v conda &> /dev/null; then
+    echo "Activating conda environment..."
+    source ~/miniconda3/etc/profile.d/conda.sh || source ~/anaconda3/etc/profile.d/conda.sh
+    conda activate vst || echo "Warning: Could not activate conda environment"
+fi
 
-# Activate conda environment
-source ~/miniconda3/etc/profile.d/conda.sh
-conda activate vst
+# Kill any running Flask processes
+echo "Stopping any running Flask processes..."
+pkill -f "python app.py" || true
+sleep 2
 
-# Start Flask in background with logging
-nohup python app.py > logs/flask.log 2>&1 &
+# Start Flask application in background
+echo "Starting Flask application..."
+python app.py > logs/flask.log 2>&1 &
 
-echo "Server started. Check logs/flask.log for details"
+echo "Server restart complete!"
+echo "To check server status, use: ps aux | grep 'python app.py'"

@@ -36,7 +36,7 @@ sleep 2
 
 # Start Flask application with full path and verbose output
 echo "Starting Flask application..."
-python "app.py" &
+python "app.py" 
 
 # Optional: Run diagnostic script to verify logging
 python "$/utils/logging_diagnostic.py"

@@ -2,21 +2,19 @@
 
 # Get the absolute path of the script's directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 echo "Starting server restart process..."
 echo "Script directory: $SCRIPT_DIR"
 
 # Ensure correct working directory
 cd "$SCRIPT_DIR" || exit 1
 
+# Create PID file location
+PID_FILE="$SCRIPT_DIR/flask.pid"
+
 # Explicitly set up log directories with correct permissions
 echo "Setting up log directories..."
 mkdir -p logs flask_session
 chmod 775 logs flask_session
-
-# Ensure correct ownership (replace 'your_user' with the actual user)
-# Uncomment and modify if needed
-# sudo chown your_user:your_group logs flask_session
 
 # Detailed logging of directory setup
 echo "Log directory details:"
@@ -31,15 +29,35 @@ fi
 
 # Kill any running Flask processes
 echo "Stopping any running Flask processes..."
-pkill -f "python app.py" || true
-sleep 2
+if [ -f "$PID_FILE" ]; then
+    OLD_PID=$(cat "$PID_FILE")
+    if kill -0 "$OLD_PID" 2>/dev/null; then
+        echo "Stopping existing process ($OLD_PID)..."
+        kill "$OLD_PID"
+        sleep 2
+    fi
+    rm "$PID_FILE"
+fi
 
-# Start Flask application with full path and verbose output
+# Start Flask application with log capture
 echo "Starting Flask application..."
-python "app.py" 
+nohup python "$SCRIPT_DIR/app.py" > "$SCRIPT_DIR/logs/flask.log" 2>&1 & 
+NEW_PID=$!
 
-# Optional: Run diagnostic script to verify logging
-python "$/utils/logging_diagnostic.py"
+# Save the PID
+echo $NEW_PID > "$PID_FILE"
+echo "Flask started with PID: $NEW_PID"
 
-echo "Server restart complete!"
+# Verify the process is running
+sleep 2
+if kill -0 "$NEW_PID" 2>/dev/null; then
+    echo "Server successfully started!"
+    echo "Log file: $SCRIPT_DIR/logs/flask.log"
+    echo "PID file: $PID_FILE"
+else
+    echo "Error: Server failed to start. Check logs for details."
+    exit 1
+fi
+
 echo "To check server status, use: ps aux | grep 'python app.py'"
+echo "To view logs, use: tail -f $SCRIPT_DIR/logs/flask.log"

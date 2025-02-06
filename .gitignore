@@ -1,2 +1,8 @@
 *.log
 *.json
+
+# ignore all files in the directory /utils/__pycache__/
+/utils/__pycache__/*
+flask_session/
+__pycache__/
+*.pyc

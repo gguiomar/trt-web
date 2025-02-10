@@ -326,10 +326,16 @@ def final():
     except Exception as e:
         debug_log(f"Error in final route: {str(e)}\n{traceback.format_exc()}")
         raise
+
+
 if __name__ == '__main__':
     debug_log("Starting Flask application")
     try:
-        app.run(host='0.0.0.0', port=8000, debug=True)  # Changed host and port
+        app.run(
+            host='127.0.0.1',  # Local host only since Nginx will proxy
+            port=5000,         # Port 5000 as specified in Nginx config
+            debug=True         # Set to False in production
+        )
     except Exception as e:
         debug_log(f"Error starting Flask app: {str(e)}\n{traceback.format_exc()}")
         raise

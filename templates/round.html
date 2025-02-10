@@ -5,9 +5,10 @@
     <h2>Round {{ round_number + 1 }}</h2>
     <div id="cues" class="queues-{{ round_data.queues|length }}">
         {% for cue in round_data.queues %}
-            <button class="cue-button" 
+            <button class="cue-button {% if not cue.active %}inactive{% endif %}" 
                     data-color="{{ cue.color }}" 
-                    data-quadrant="{{ cue.quadrant }}">
+                    data-quadrant="{{ cue.quadrant }}"
+                    {% if not cue.active %}disabled{% endif %}>
                 {{ cue.name }}
             </button>
         {% endfor %}
@@ -52,7 +53,7 @@
         window.location.href = "/round/" + nextRound;
     }
     
-    document.querySelectorAll('.cue-button').forEach(function(button) {
+    document.querySelectorAll('.cue-button:not(.inactive)').forEach(function(button) {
         button.addEventListener('click', function() {
             if (this.getAttribute('data-clicked') === 'true') return;
             
@@ -70,4 +71,12 @@
         });
     });
 </script>
+
+<style>
+    .cue-button.inactive {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+</style>
 {% endblock %}

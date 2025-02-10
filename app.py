@@ -8,7 +8,6 @@ from utils.config import SESSION_DIR, debug_log, LOGS_DIR
 from utils.GameLogger import GameLogger
 from utils.VSTtask import VSTtask
 from utils.StatsCalculator import StatsCalculator
-
 from datetime import datetime, timezone
 
 app = Flask(__name__)
@@ -137,8 +136,8 @@ def about():
 @app.route('/')
 def index():
     debug_log("Accessing index page")
-    debug_log(f"Current session state: {dict(session)}")  # Add session logging
-    return render_template('index.html')
+    debug_log(f"Current session state: {dict(session)}")
+    return redirect(url_for('introduction'))
 
 @app.route('/test_session')
 def test_session():
@@ -214,12 +213,12 @@ def start():
         # Add this debug print
         print(f"Session after setting game info: {dict(session)}", flush=True)
         
-        # Initialize game
-        task = VSTtask(n_rounds=5, n_quadrants=4, n_queues=1)
+        # Initialize game with random number of rounds
+        task = VSTtask(n_quadrants=4, n_queues=1)  # Rounds are now random in VSTtask
         session['game'] = {
             'rounds': task.rounds,
             'biased_quadrant': task.biased_quadrant,
-            'n_rounds': task.n_rounds,
+            'n_rounds': task.n_rounds,  # This will now be random between 5-15
             'n_quadrants': task.n_quadrants,
             'current_round': 0,
             'task_description': task.get_task_description()

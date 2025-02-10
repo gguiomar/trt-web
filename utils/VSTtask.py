@@ -2,15 +2,17 @@ import random
 from .config import debug_log
 
 class VSTtask:
-    def __init__(self, n_rounds: int = 5, n_quadrants: int = 4, n_queues: int = 1):
+    def __init__(self, n_quadrants: int = 4, n_queues: int = 1):
         if not 2 <= n_quadrants <= 4:
             raise ValueError("Number of quadrants must be between 2 and 4")
         if n_queues < 1:
             raise ValueError("Number of queues per quadrant must be at least 1")
             
-        self.n_rounds = n_rounds
+        # Randomly determine number of rounds (5-15)
+        self.n_rounds = random.randint(5, 15)
         self.n_quadrants = n_quadrants
         self.n_queues = n_queues
+        self.max_cues_per_round = n_quadrants * n_queues
         
         # Setup quadrants and queues
         self.letters = [chr(65 + i) for i in range(n_quadrants * n_queues)]
@@ -21,7 +23,7 @@ class VSTtask:
         
         self.quadrants = list(range(n_quadrants))
         self.biased_quadrant = random.choice(self.quadrants)
-        debug_log(f"Created VSTtask with biased quadrant: {self.biased_quadrant}")
+        debug_log(f"Created VSTtask with biased quadrant: {self.biased_quadrant} and {self.n_rounds} rounds")
         self.rounds = self._generate_rounds()
 
     def _get_color(self, quadrant: int) -> str:
@@ -33,15 +35,27 @@ class VSTtask:
         while True:
             rounds = []
             for _ in range(self.n_rounds):
-                round_queues = []
+                # Determine number of active cues for this round (2 to max)
+                n_active_cues = random.randint(2, self.max_cues_per_round)
+                
+                # Create all possible cues first
+                all_cues = []
                 for q in self.quadrants:
                     for queue in self.queue_map[q]:
-                        round_queues.append({
+                        all_cues.append({
                             'name': queue,
                             'color': self._get_color(q),
-                            'quadrant': q
+                            'quadrant': q,
+                            'active': False  # Default to inactive
                         })
-                rounds.append({'queues': round_queues})
+                
+                # Randomly select cues to be active
+                active_indices = random.sample(range(len(all_cues)), n_active_cues)
+                for idx in active_indices:
+                    all_cues[idx]['active'] = True
+                
+                rounds.append({'queues': all_cues})
+                
             if self._validate_rounds([r['queues'] for r in rounds]):
                 return rounds
 
@@ -49,9 +63,11 @@ class VSTtask:
         color_counts = {q: {'RED': 0, 'GREEN': 0} for q in self.quadrants}
         for round_queues in rounds:
             for queue in round_queues:
-                q = queue['quadrant']
-                color = queue['color']
-                color_counts[q][color] += 1
+                if queue['active']:  # Only count active queues
+                    q = queue['quadrant']
+                    color = queue['color']
+                    color_counts[q][color] += 1
+        
         for q in self.quadrants:
             total = color_counts[q]['RED'] + color_counts[q]['GREEN']
             if total == 0:
@@ -70,11 +86,11 @@ class VSTtask:
     def get_task_description(self) -> str:
         return (
             f"You will play a game with {self.n_rounds} rounds.<br>"
-            "In each round you'll see active queues (clickable buttons):<br>"
+            "In each round you'll see both active and inactive queues:<br>"
             "One quadrant has 90% one color / 10% the other<br>"
             "Other quadrants have a 50/50 color distribution<br>"
-            "At least one queue is active per round<br>"
-            "Active queues disappear after a short duration.<br><br>"
+            "2 to {self.max_cues_per_round} queues will be active per round<br>"
+            "Inactive queues appear greyed out and cannot be selected.<br><br>"
             f"After {self.n_rounds} rounds, identify the biased quadrant.<br>"
             "Correct: +100 points, Wrong: -100 points."
         )

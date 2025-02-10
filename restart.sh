@@ -20,7 +20,7 @@ sleep 2
 
 # Start gunicorn in background
 echo "Starting gunicorn..."
-gunicorn app:app -w 4 -b 127.0.0.1:8000 > logs/gunicorn.log 2>&1 &
+gunicorn app:app -w 4 -b 127.0.0.1:5000 > logs/gunicorn.log 2>&1 &
 
 # Restart nginx
 echo "Restarting nginx..."

@@ -329,7 +329,7 @@ def final():
 if __name__ == '__main__':
     debug_log("Starting Flask application")
     try:
-        app.run(host='0.0.0.0', port=8080, debug=True)  # Changed host and port
+        app.run(host='0.0.0.0', debug=True)  # Changed host and port
     except Exception as e:
         debug_log(f"Error starting Flask app: {str(e)}\n{traceback.format_exc()}")
         raise

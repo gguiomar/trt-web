@@ -6,8 +6,8 @@ echo "Starting server restart process..."
 mkdir -p logs flask_session
 chmod 775 logs flask_session
 
-# Activate conda environment
-source ~/miniconda3/etc/profile.d/conda.sh
+# Activate conda environment with correct path
+source /home/vst/miniconda3/etc/profile.d/conda.sh
 conda activate vst
 
 # Kill any running gunicorn processes

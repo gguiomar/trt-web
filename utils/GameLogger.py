@@ -1,67 +1,78 @@
 import os
 import json
-from datetime import datetime
 import uuid
-import traceback
-from .config import LOGS_DIR, debug_log
+from datetime import datetime, timezone
 
 class GameLogger:
-    def __init__(self):
-        # Use same directory creation pattern
-        self.logs_dir = os.path.join(os.path.dirname(__file__), 'logs')
-        os.makedirs(self.logs_dir, exist_ok=True)
-        print(f"GameLogger initialized. Logs directory: {self.logs_dir}", flush=True)
+    def __init__(self, logs_dir='logs'):
+        self.logs_dir = logs_dir
+        if not os.path.exists(logs_dir):
+            os.makedirs(logs_dir)
 
     def create_game_log(self):
-        """Create a new game log file using proven pattern"""
-        try:
-            # Generate unique filename
-            game_id = str(uuid.uuid4())
-            filename = f"game_{game_id}.json"
-            filepath = os.path.join(self.logs_dir, filename)
-            
-            # Initial game structure
-            game_data = {
-                'game_id': game_id,
-                'start_time': datetime.utcnow().isoformat(),
-                'choices': [],
-                'metadata': {
-                    'file_created': datetime.utcnow().isoformat()
-                }
-            }
-            
-            # Use the working file writing pattern
-            with open(filepath, 'w') as f:
-                json.dump(game_data, f, indent=2)
-                
-            print(f"Created game log: {filepath}", flush=True)
-            return game_id, filepath
-                
-        except Exception as e:
-            print(f"Error creating game log: {str(e)}", flush=True)
-            raise
+        """Create a new game log file with unique ID"""
+        game_id = str(uuid.uuid4())
+        filename = f"game_{game_id}.json"
+        filepath = os.path.join(self.logs_dir, filename)
+        
+        # Initialize log file with metadata
+        game_data = {
+            'game_id': game_id,
+            'start_time': datetime.now(timezone.utc).isoformat(),
+            'choices': [],  # Will store all intermediate choices
+            'final_choice': None,
+            'completion_time': None,
+            'total_duration': None,
+            'success': None
+        }
+        
+        with open(filepath, 'w') as f:
+            json.dump(game_data, f, indent=2)
+        
+        return game_id, filepath
 
-    def log_choice(self, filepath, choice_data):
-        """Log a choice to the game file"""
+    def log_choice(self, filepath, data):
+        """Log a choice during the game"""
         try:
-            # Read current game data
             with open(filepath, 'r') as f:
                 game_data = json.load(f)
             
-            # Add timestamp if not present
-            if 'timestamp' not in choice_data:
-                choice_data['timestamp'] = datetime.utcnow().isoformat()
+            if data.get('type') == 'final_choice':
+                # Log the final choice
+                game_data['final_choice'] = {
+                    'chosen_quadrant': data['chosen_quadrant'],
+                    'correct': data['correct'],
+                    'score': data['score'],
+                    'biased_quadrant': data['biased_quadrant']
+                }
+                game_data['completion_time'] = datetime.now(timezone.utc).isoformat()
+                
+                # Calculate total duration
+                start_time = datetime.fromisoformat(game_data['start_time'])
+                end_time = datetime.fromisoformat(game_data['completion_time'])
+                game_data['total_duration'] = (end_time - start_time).total_seconds()
+                game_data['success'] = data['correct']
+            else:
+                # Log intermediate choice
+                choice_data = {
+                    'round': data['round'],
+                    'quadrant': data['quadrant'],
+                    'cue_name': data['cue_name'],
+                    'color': data['color'],
+                    'timestamp': data['client_timestamp'],
+                    'choice_number': data.get('choice_number', len(game_data['choices']) + 1)
+                }
+                game_data['choices'].append(choice_data)
             
-            # Append new choice
-            game_data['choices'].append(choice_data)
-            
-            # Write updated data
+            # Save updated game data
             with open(filepath, 'w') as f:
                 json.dump(game_data, f, indent=2)
-                
-            print(f"Logged choice to: {filepath}", flush=True)
+            
+            # Trigger statistics update
+            from utils.StatsCalculator import StatsCalculator
+            StatsCalculator.update_statistics(self.logs_dir)
+            
             return True
-                
         except Exception as e:
-            print(f"Error logging choice: {str(e)}", flush=True)
+            print(f"Error logging choice: {str(e)}")
             return False

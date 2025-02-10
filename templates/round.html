@@ -19,13 +19,16 @@
     
     function logChoice(button, cueName, cueColor) {
         const quadrant = button.getAttribute('data-quadrant');
+        const timestamp = new Date();
         
         const logData = {
+            type: 'choice',
             round: roundNumber,
             quadrant: parseInt(quadrant),
-            choice: cueName,
+            cue_name: cueName,
             color: cueColor,
-            client_timestamp: new Date().toISOString()
+            client_timestamp: timestamp.toISOString(),
+            choice_number: document.querySelectorAll('[data-clicked="true"]').length
         };
 
         fetch('/log_choice', {
@@ -62,6 +65,7 @@
             
             logChoice(this, cueName, color);
             
+            // Add delay before next round
             setTimeout(goNext, 500);
         });
     });

@@ -7,8 +7,9 @@ import os
 from utils.config import SESSION_DIR, debug_log, LOGS_DIR
 from utils.GameLogger import GameLogger
 from utils.VSTtask import VSTtask
+from utils.StatsCalculator import StatsCalculator
 
-import datetime
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 
@@ -97,7 +98,28 @@ def play():
 
 @app.route('/human-statistics')
 def human_statistics():
-    return render_template('human_statistics.html')
+    stats = StatsCalculator.get_current_stats()
+    if not stats:
+        # Return default values if no statistics are available
+        stats = {
+            'total_games': 0,
+            'success_rate': 0,
+            'average_duration': 0,
+            'performance_distribution': {'bins': [], 'counts': []},
+            'learning_curve': {'window_size': 0, 'rates': []}
+        }
+    
+    # Convert average duration from seconds to minutes:seconds format
+    avg_duration_mins = int(stats['average_duration'] // 60)
+    avg_duration_secs = int(stats['average_duration'] % 60)
+    formatted_duration = f"{avg_duration_mins}:{avg_duration_secs:02d}"
+    
+    return render_template('human_statistics.html',
+                         total_games=stats['total_games'],
+                         success_rate=f"{stats['success_rate']:.1f}",
+                         avg_duration=formatted_duration,
+                         performance_dist=stats['performance_distribution'],
+                         learning_curve=stats['learning_curve'])
 
 @app.route('/llm-leaderboard')
 def llm_leaderboard():
@@ -287,7 +309,8 @@ def final():
                     'chosen_quadrant': chosen,
                     'correct': correct,
                     'score': score,
-                    'biased_quadrant': game['biased_quadrant']
+                    'biased_quadrant': game['biased_quadrant'],
+                    'client_timestamp': datetime.now(timezone.utc).isoformat()
                 }
                 success = game_logger.log_choice(log_filepath, result_data)
                 if not success:
@@ -304,7 +327,6 @@ def final():
     except Exception as e:
         debug_log(f"Error in final route: {str(e)}\n{traceback.format_exc()}")
         raise
-
 if __name__ == '__main__':
     debug_log("Starting Flask application")
     try:

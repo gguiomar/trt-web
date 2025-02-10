@@ -7,19 +7,19 @@
     <div class="stats-grid">
         <div class="stats-card">
             <h3>Overall Performance</h3>
-            <div class="stat-value">67.2%</div>
+            <div class="stat-value">{{ success_rate }}%</div>
             <p>Average Success Rate</p>
         </div>
         
         <div class="stats-card">
             <h3>Total Games</h3>
-            <div class="stat-value">1,234</div>
+            <div class="stat-value">{{ total_games }}</div>
             <p>Games Completed</p>
         </div>
         
         <div class="stats-card">
             <h3>Average Time</h3>
-            <div class="stat-value">2:45</div>
+            <div class="stat-value">{{ avg_duration }}</div>
             <p>Minutes per Game</p>
         </div>
     </div>
@@ -27,23 +27,72 @@
     <div class="stats-section">
         <h2>Performance Distribution</h2>
         <div class="chart-container">
-            <!-- Placeholder for chart -->
-            <div style="width: 100%; height: 300px; background: #2a2a2a; border-radius: 8px; margin: 1rem 0;">
-                [Performance Distribution Chart]
-            </div>
+            <canvas id="performanceChart"></canvas>
         </div>
     </div>
 
     <div class="stats-section">
         <h2>Learning Curve</h2>
         <div class="chart-container">
-            <!-- Placeholder for chart -->
-            <div style="width: 100%; height: 300px; background: #2a2a2a; border-radius: 8px; margin: 1rem 0;">
-                [Learning Curve Chart]
-            </div>
+            <canvas id="learningChart"></canvas>
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+    // Performance Distribution Chart
+    const perfCtx = document.getElementById('performanceChart').getContext('2d');
+    const perfData = {{ performance_dist | tojson }};
+    new Chart(perfCtx, {
+        type: 'bar',
+        data: {
+            labels: perfData.bins.slice(0, -1).map((val, idx) => 
+                `${val} to ${perfData.bins[idx + 1]}`),
+            datasets: [{
+                label: 'Number of Games',
+                data: perfData.counts,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Learning Curve Chart
+    const learnCtx = document.getElementById('learningChart').getContext('2d');
+    const learnData = {{ learning_curve | tojson }};
+    new Chart(learnCtx, {
+        type: 'line',
+        data: {
+            labels: learnData.rates.map((_, idx) => 
+                `Games ${idx * learnData.window_size}-${(idx + 1) * learnData.window_size}`),
+            datasets: [{
+                label: 'Success Rate (%)',
+                data: learnData.rates,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+</script>
 
 <style>
 .content-section {
@@ -85,6 +134,10 @@
 
 .chart-container {
     margin: 2rem 0;
+    background: #2a2a2a;
+    padding: 1rem;
+    border-radius: 8px;
+    height: 300px;
 }
 </style>
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
-from flask_session import Session
+#from flask_session import Session
 import traceback
 import os
 
@@ -22,7 +22,7 @@ app.config.update(
 )
 
 # Initialize Flask-Session
-Session(app)
+#Session(app)
 
 # Initialize the game logger
 game_logger = GameLogger()

@@ -51,6 +51,13 @@ body {
     font-weight: bold;
 }
 
+.sidebar-logo {
+    display: block;          /* Makes the image a block element */
+    width: 150px;            /* Adjust the width as needed */
+    height: auto;            /* Maintains aspect ratio */
+    margin: 0 auto;          /* Centers the image horizontally */
+}
+
 .sidebar-link {
     display: block;
     color: var(--text-secondary);

@@ -21,6 +21,22 @@ body {
     display: flex;
 }
 
+.text-section ul {
+    color: var(--text-secondary);       /* Same text color as paragraphs */
+    max-width: 800px;                     /* Same maximum width as paragraphs */
+    margin: 0 auto 2rem;                  /* Centered and with bottom margin */
+    font-size: 1.2rem;                    /* Match the font size */
+    line-height: 1.8;                     /* Match the line height */
+    text-align: left;                   /* Center the text */
+    padding-left: 20;                      /* Remove default left indentation */
+    list-style-type: disc;                /* Use bullet points */
+    list-style-position: inside;          /* Place bullets inside the text block */
+}
+
+.text-section ul li {
+    margin-bottom: 8px;                   /* Spacing between list items */
+}
+
 /* Layout styles */
 .layout-container {
     display: flex;
@@ -49,6 +65,7 @@ body {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     font-weight: bold;
+    text-align: center;
 }
 
 .sidebar-logo {
@@ -69,6 +86,15 @@ body {
 
 .sidebar-link:hover {
     color: var(--text-primary);
+}
+
+.us-section a {
+    color: var(--accent-blue);  /* Sets the link color to blue */
+    text-decoration: none;      /* Removes the default underline */
+}
+
+.us-section a:hover {
+    text-decoration: underline; /* Underline on hover for clarity */
 }
 
 /* Heading styles */

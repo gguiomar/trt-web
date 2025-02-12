@@ -62,7 +62,7 @@ body {
 /* Sidebar styles */
 .sidebar-title {
     color: var(--text-primary);
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     margin-bottom: 2rem;
     font-weight: bold;
     text-align: center;

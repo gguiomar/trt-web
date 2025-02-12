@@ -214,11 +214,11 @@ def start():
         print(f"Session after setting game info: {dict(session)}", flush=True)
         
         # Initialize game with random number of rounds
-        task = VSTtask(n_quadrants=4, n_queues=1)  # Rounds are now random in VSTtask
+        task = VSTtask(n_quadrants=4, n_queues=1) 
         session['game'] = {
             'rounds': task.rounds,
             'biased_quadrant': task.biased_quadrant,
-            'n_rounds': task.n_rounds,  # This will now be random between 5-15
+            'n_rounds': task.n_rounds,  
             'n_quadrants': task.n_quadrants,
             'current_round': 0,
             'task_description': task.get_task_description()

@@ -9,7 +9,7 @@ class VSTtask:
             raise ValueError("Number of queues per quadrant must be at least 1")
             
         # Randomly determine number of rounds (5-15)
-        self.n_rounds = random.randint(5, 15)
+        self.n_rounds = random.randint(2, 10)
         self.n_quadrants = n_quadrants
         self.n_queues = n_queues
         self.max_cues_per_round = n_quadrants * n_queues

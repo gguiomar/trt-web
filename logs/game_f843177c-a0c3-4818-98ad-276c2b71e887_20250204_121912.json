@@ -1,0 +1,59 @@
+{
+  "game_id": "f843177c-a0c3-4818-98ad-276c2b71e887",
+  "start_time": "2025-02-04T12:19:12.542282",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 0,
+      "choice": "A",
+      "color": "RED",
+      "client_timestamp": "2025-02-04T12:19:59.144Z",
+      "game_id": "f843177c-a0c3-4818-98ad-276c2b71e887",
+      "timestamp": "2025-02-04T12:19:59.151786"
+    },
+    {
+      "round": 1,
+      "quadrant": 1,
+      "choice": "B",
+      "color": "RED",
+      "client_timestamp": "2025-02-04T12:20:01.894Z",
+      "game_id": "f843177c-a0c3-4818-98ad-276c2b71e887",
+      "timestamp": "2025-02-04T12:20:01.900683"
+    },
+    {
+      "round": 2,
+      "quadrant": 2,
+      "choice": "C",
+      "color": "GREEN",
+      "client_timestamp": "2025-02-04T12:20:02.947Z",
+      "game_id": "f843177c-a0c3-4818-98ad-276c2b71e887",
+      "timestamp": "2025-02-04T12:20:02.953091"
+    },
+    {
+      "round": 3,
+      "quadrant": 0,
+      "choice": "A",
+      "color": "RED",
+      "client_timestamp": "2025-02-04T12:20:04.394Z",
+      "game_id": "f843177c-a0c3-4818-98ad-276c2b71e887",
+      "timestamp": "2025-02-04T12:20:04.397616"
+    },
+    {
+      "round": 4,
+      "quadrant": 0,
+      "choice": "A",
+      "color": "RED",
+      "client_timestamp": "2025-02-04T12:20:06.627Z",
+      "game_id": "f843177c-a0c3-4818-98ad-276c2b71e887",
+      "timestamp": "2025-02-04T12:20:06.630521"
+    },
+    {
+      "type": "final_choice",
+      "chosen_quadrant": 0,
+      "correct": true,
+      "score": 100,
+      "biased_quadrant": 0,
+      "timestamp": "2025-02-04T12:20:07.911135"
+    }
+  ]
+}

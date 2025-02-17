@@ -1,5 +1,5 @@
 *.log
-*.json
+#*.json
 
 # ignore all files in the directory /utils/__pycache__/
 /utils/__pycache__/*

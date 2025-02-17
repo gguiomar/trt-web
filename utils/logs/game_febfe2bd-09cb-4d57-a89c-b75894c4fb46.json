@@ -1,0 +1,17 @@
+{
+  "game_id": "febfe2bd-09cb-4d57-a89c-b75894c4fb46",
+  "start_time": "2025-02-06T09:08:43.331091",
+  "choices": [
+    {
+      "type": "final_choice",
+      "chosen_quadrant": 3,
+      "correct": false,
+      "score": -100,
+      "biased_quadrant": 2,
+      "timestamp": "2025-02-06T09:08:48.567359"
+    }
+  ],
+  "metadata": {
+    "file_created": "2025-02-06T09:08:43.331095"
+  }
+}

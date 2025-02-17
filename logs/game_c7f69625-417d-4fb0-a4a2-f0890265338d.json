@@ -1,0 +1,14 @@
+{
+  "game_id": "c7f69625-417d-4fb0-a4a2-f0890265338d",
+  "start_time": "2025-02-13T17:20:27.015364+00:00",
+  "choices": [],
+  "final_choice": {
+    "chosen_quadrant": 2,
+    "correct": true,
+    "score": 100,
+    "biased_quadrant": 2
+  },
+  "completion_time": "2025-02-13T17:20:27.199736+00:00",
+  "total_duration": 0.184372,
+  "success": true
+}

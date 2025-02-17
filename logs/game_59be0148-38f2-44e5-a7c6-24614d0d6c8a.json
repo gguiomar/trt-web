@@ -1,0 +1,31 @@
+{
+  "game_id": "59be0148-38f2-44e5-a7c6-24614d0d6c8a",
+  "start_time": "2025-02-13T13:31:33.182401+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 1,
+      "cue_name": "B",
+      "color": "GREEN",
+      "timestamp": "2025-02-13T13:31:34.598Z",
+      "choice_number": 1
+    },
+    {
+      "round": 1,
+      "quadrant": 3,
+      "cue_name": "D",
+      "color": "RED",
+      "timestamp": "2025-02-13T13:31:35.705Z",
+      "choice_number": 1
+    }
+  ],
+  "final_choice": {
+    "chosen_quadrant": 2,
+    "correct": false,
+    "score": -100,
+    "biased_quadrant": 3
+  },
+  "completion_time": "2025-02-13T13:31:38.009506+00:00",
+  "total_duration": 4.827105,
+  "success": false
+}

@@ -1,44 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{% block title %}Temporal Reasoning Task{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}G1Bbon - Temporal Reasoning Task{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="{{ url_for('static', filename='js/GameLogger.js') }}"></script>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <div class="layout-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-section">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="sidebar-logo">
-                <h3 class="sidebar-title">
-                    a tiny benchmark<br>
-                    for tiny minds
-                </h3>
-            </div>
-            
-            <div class="sidebar-section">
-                <a href="{{ url_for('introduction') }}" class="sidebar-link">Introduction</a>
-                <a href="{{ url_for('play') }}" class="sidebar-link">Play</a>
-                <a href="{{ url_for('human_statistics') }}" class="sidebar-link">Human Statistics</a>
-                <a href="{{ url_for('llm_leaderboard') }}" class="sidebar-link">LLM Leaderboard</a>
-                <!-- <a href="{{ url_for('research_notes') }}" class="sidebar-link">Research Notes</a> -->
-                <a href="{{ url_for('about') }}" class="sidebar-link">About Us</a>
-            </div>
-        </div>
+    <!-- Header with navigation -->
+    <header class="site-header">
+        <a href="{{ url_for('index') }}" class="site-logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="G1Bbon Logo">
+            <span class="site-title">G1Bbon</span>
+        </a>
         
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="game-container">
-                {% block content %}{% endblock %}
-            </div>
-            <div id="logger"></div>
-        </div>
-    </div>
+        <nav class="site-nav">
+            <button class="mobile-menu-button" aria-label="Toggle menu">☰</button>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('introduction') }}" class="nav-link {% if request.endpoint == 'introduction' %}active{% endif %}">Introduction</a></li>
+                <li><a href="{{ url_for('play') }}" class="nav-link {% if request.endpoint == 'play' %}active{% endif %}">Play</a></li>
+                <li><a href="{{ url_for('human_statistics') }}" class="nav-link {% if request.endpoint == 'human_statistics' %}active{% endif %}">Human Statistics</a></li>
+                <li><a href="{{ url_for('llm_leaderboard') }}" class="nav-link {% if request.endpoint == 'llm_leaderboard' %}active{% endif %}">LLM Leaderboard</a></li>
+                <li><a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+        <div id="logger"></div>
+    </main>
     
     <script>
         // Initialize React Logger
@@ -46,6 +45,26 @@
         if (loggerContainer) {
             ReactDOM.render(React.createElement(GameLogger), loggerContainer);
         }
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.querySelector('.mobile-menu-button');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        }
+        
+        // Navbar color change on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.site-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
     </script>
     
     {% block scripts %}{% endblock %}

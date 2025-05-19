@@ -10,36 +10,7 @@
             As we continue to collect more data, we will update the leaderboard to reflect the latest scores only for the 1B models.
         </p>
     </div>
-
-    <!-- 2 Quadrants Benchmark Table -->
-    <div class="leaderboard-container">
-        <h2>G1Bbon Benchmark (2 Quadrants)</h2>
-        <table class="leaderboard-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Model</th>
-                    <th>Aggregated Mean Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>1</td><td>gpt40</td><td>0.70 - 0.72</td></tr>
-                <tr><td>2</td><td>Centaur_88</td><td>0.63 - 0.65</td></tr>
-                <tr><td>3</td><td>gpt40_mini</td><td>0.58 - 0.60</td></tr>
-                <tr><td>4</td><td>Qwen_78_Instruct</td><td>0.50 - 0.52</td></tr>
-                <tr><td>5</td><td>Qwen_3B_Instruct</td><td>0.45 - 0.47</td></tr>
-                <tr><td>6</td><td>Qwen_3B</td><td>0.42 - 0.44</td></tr>
-                <tr><td>7</td><td>Qwen_7B</td><td>0.40 - 0.42</td></tr>
-                <tr><td>8</td><td>Deepseek_R1_7B_Qwen</td><td>0.38 - 0.40</td></tr>
-                <tr><td>9</td><td>Qwen_1B</td><td>0.35 - 0.37</td></tr>
-                <tr><td>10</td><td>Owen_1B</td><td>0.32 - 0.34</td></tr>
-                <tr><td>11</td><td>Owen_1B_Instruct</td><td>0.30 - 0.32</td></tr>
-                <tr><td>12</td><td>Deepseek_R1_8B_Llama</td><td>0.16 - 0.18</td></tr>
-                <tr><td>13</td><td>Deepseek_R1_1B_Owen</td><td>0.14 - 0.16</td></tr>
-            </tbody>
-        </table>
-    </div>
-
+    
     <!-- 4 Quadrants Benchmark Table -->
     <div class="leaderboard-container">
         <h2>G1Bbon Benchmark (4 Quadrants)</h2>
@@ -72,38 +43,32 @@
 <style>
 .content-section {
     max-width: 1000px;
-    margin: 0 auto;
-    padding: 2rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
 }
 
 .leaderboard-container {
-    margin: 2rem 0;
-    overflow-x: auto;
+    margin: 2.5rem 0;
+    opacity: 0;
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
-.leaderboard-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #2a2a2a;
-    border-radius: 8px;
-    overflow: hidden;
+.leaderboard-container:nth-of-type(2) {
+    animation-delay: 0.1s;
 }
 
-.leaderboard-table th,
-.leaderboard-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #3a3a3a;
+.leaderboard-container:nth-of-type(3) {
+    animation-delay: 0.2s;
 }
 
-.leaderboard-table th {
-    background: #333;
-    font-weight: bold;
+.leaderboard-container h2 {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
 }
 
-.leaderboard-table tr:hover {
-    background: #333;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
-
 {% endblock %}

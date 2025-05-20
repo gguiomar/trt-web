@@ -1,0 +1,95 @@
+{
+  "game_id": "e595410f-f2f2-4e9c-a138-2314eb24eeab",
+  "start_time": "2025-05-19T14:32:27.843876+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "GREEN",
+      "timestamp": "2025-05-19T14:34:05.903Z",
+      "choice_number": 1
+    },
+    {
+      "round": 1,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:34:07.290Z",
+      "choice_number": 1
+    },
+    {
+      "round": 2,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:34:08.880Z",
+      "choice_number": 1
+    },
+    {
+      "round": 3,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "GREEN",
+      "timestamp": "2025-05-19T14:34:10.483Z",
+      "choice_number": 1
+    },
+    {
+      "round": 4,
+      "quadrant": 3,
+      "cue_name": "D",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:34:11.647Z",
+      "choice_number": 1
+    },
+    {
+      "round": 5,
+      "quadrant": 1,
+      "cue_name": "B",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:34:13.011Z",
+      "choice_number": 1
+    },
+    {
+      "round": 6,
+      "quadrant": 3,
+      "cue_name": "D",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:34:15.586Z",
+      "choice_number": 1
+    },
+    {
+      "round": 7,
+      "quadrant": 1,
+      "cue_name": "B",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:34:16.878Z",
+      "choice_number": 1
+    },
+    {
+      "round": 8,
+      "quadrant": 3,
+      "cue_name": "D",
+      "color": "GREEN",
+      "timestamp": "2025-05-19T14:34:18.160Z",
+      "choice_number": 1
+    },
+    {
+      "round": 9,
+      "quadrant": 1,
+      "cue_name": "B",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:34:20.054Z",
+      "choice_number": 1
+    }
+  ],
+  "final_choice": {
+    "chosen_quadrant": 1,
+    "correct": true,
+    "score": 100,
+    "biased_quadrant": 1
+  },
+  "completion_time": "2025-05-19T14:32:44.159543+00:00",
+  "total_duration": 16.315667,
+  "success": true
+}

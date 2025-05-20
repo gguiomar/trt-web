@@ -1,0 +1,103 @@
+{
+  "game_id": "8652a345-8905-43b7-9f16-5fe68c7b7260",
+  "start_time": "2025-05-20T17:56:26.766355+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:27.830Z",
+      "choice_number": 1
+    },
+    {
+      "round": 1,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:29.414Z",
+      "choice_number": 1
+    },
+    {
+      "round": 2,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "GREEN",
+      "timestamp": "2025-05-20T17:56:30.548Z",
+      "choice_number": 1
+    },
+    {
+      "round": 3,
+      "quadrant": 3,
+      "cue_name": "D",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:32.248Z",
+      "choice_number": 1
+    },
+    {
+      "round": 4,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:33.880Z",
+      "choice_number": 1
+    },
+    {
+      "round": 5,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:35.164Z",
+      "choice_number": 1
+    },
+    {
+      "round": 6,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:36.314Z",
+      "choice_number": 1
+    },
+    {
+      "round": 7,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:37.549Z",
+      "choice_number": 1
+    },
+    {
+      "round": 8,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:38.713Z",
+      "choice_number": 1
+    },
+    {
+      "round": 9,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:39.847Z",
+      "choice_number": 1
+    },
+    {
+      "round": 10,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T17:56:41.055Z",
+      "choice_number": 1
+    }
+  ],
+  "final_choice": {
+    "chosen_quadrant": 2,
+    "correct": true,
+    "score": 100,
+    "biased_quadrant": 2
+  },
+  "completion_time": "2025-05-20T17:56:42.804851+00:00",
+  "total_duration": 16.038496,
+  "success": true
+}

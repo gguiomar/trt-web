@@ -1,0 +1,63 @@
+{
+  "game_id": "63985825-d9a5-4e2c-bdaa-77b4e24f8362",
+  "start_time": "2025-05-19T14:27:22.655939+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "GREEN",
+      "timestamp": "2025-05-19T14:29:00.803Z",
+      "choice_number": 1
+    },
+    {
+      "round": 1,
+      "quadrant": 3,
+      "cue_name": "D",
+      "color": "GREEN",
+      "timestamp": "2025-05-19T14:29:01.933Z",
+      "choice_number": 1
+    },
+    {
+      "round": 2,
+      "quadrant": 1,
+      "cue_name": "B",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:29:03.099Z",
+      "choice_number": 1
+    },
+    {
+      "round": 3,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:29:04.300Z",
+      "choice_number": 1
+    },
+    {
+      "round": 4,
+      "quadrant": 1,
+      "cue_name": "B",
+      "color": "GREEN",
+      "timestamp": "2025-05-19T14:29:05.543Z",
+      "choice_number": 1
+    },
+    {
+      "round": 5,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-05-19T14:29:07.094Z",
+      "choice_number": 1
+    }
+  ],
+  "final_choice": {
+    "chosen_quadrant": 0,
+    "correct": true,
+    "score": 100,
+    "biased_quadrant": 0
+  },
+  "completion_time": "2025-05-19T14:27:31.103664+00:00",
+  "total_duration": 8.447725,
+  "success": true
+}

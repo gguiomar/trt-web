@@ -1,0 +1,18 @@
+{
+  "game_id": "9045d911-069f-451f-82c1-1fd2b3fd4406",
+  "start_time": "2025-05-20T20:51:46.809598+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-05-20T20:51:53.238Z",
+      "choice_number": 1
+    }
+  ],
+  "final_choice": null,
+  "completion_time": null,
+  "total_duration": null,
+  "success": null
+}

@@ -13,12 +13,22 @@
     </div>
 </div>
 
+<div class="attribution-overlay">
+    <p class="attribution-text">
+        Video taken from the Atavic Forest installation by <a href="https://gguiomar.github.io/" target="_blank">Gonçalo Guiomar</a>, <a href="https://www.instagram.com/jonathan.uliel.saldanha/" target="_blank">Jonathan Saldanha</a> and <a href="https://www.lunar-ring.ai/" target="_blank">Lunar Ring</a>
+    </p>
+</div>
+
 <div class="content-section">
     <div class="text-section fade-in">
-        <h2>About the Benchmark</h2>
+        <h2>About the Project</h2>
         <p>
-            The G1Bbon benchmark is based on a Temporal Reasoning Task, designed to test temporal integration and decision-making capabilities across human players and language models. 
-            The ultimate goal is to drive the development of the best probabilistic reasoning LLM constrained to <strong>1.5 billion parameters</strong>, setting a new standard for temporal reasoning and pattern detection.
+            The G1Bbon benchmark is based on a set of Temporal Reasoning Tasks, designed to test temporal integration and decision-making capabilities across human players and language models. 
+            The ultimate goal is to drive the understanding of the parallels between biological and artificial intelligence by uncovering interpretable
+            mechanisms that underlie temporal reasoning and pattern recognition.
+            This benchmark also provides a platform for evaluating the performance of language models in tasks that require understanding and integrating information over time.
+            
+            Please contact us if you are interested in collaborating on this project or if you have any questions about the benchmark.
         </p>
     </div>
     
@@ -135,6 +145,41 @@ body {
     margin-bottom: 1rem;
 }
 
+.attribution-overlay {
+    position: relative;
+    margin-top: -3rem;
+    text-align: right;
+    padding: 0 1rem;
+    z-index: 3;
+}
+
+.attribution-text {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: right;
+    line-height: 1.4;
+    margin: 0;
+    font-style: italic;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: inline-block;
+    margin-left: auto;
+}
+
+.attribution-text a {
+    color: #4ade80;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.attribution-text a:hover {
+    color: #22c55e;
+    text-decoration: underline;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
@@ -151,6 +196,16 @@ body {
     
     .hero-text p {
         font-size: 1rem;
+    }
+    
+    .attribution-overlay {
+        margin-top: -2rem;
+        padding: 0 0.5rem;
+    }
+    
+    .attribution-text {
+        font-size: 0.7rem;
+        padding: 0.4rem;
     }
 }
 </style>

@@ -18,27 +18,49 @@
 
     <div class="about-section">
         <p>
-            The Temporal Reasoning Task is a research platform designed to investigate how different agents - 
-            both human and artificial - identify and process temporal patterns. Through a series of 
-            interactive tasks, we study the cognitive processes involved in detecting statistical 
-            biases that emerge over time.
+            The Temporal Reasoning Task is a research platform designed to investigate how different agents - both human and artificial -
+            solve interactive tasks. Our aim is to understanding the underlying mechanisms involved in temporal reasoning and pattern recognition, 
+            and to develop benchmarks that can be used to evaluate the performance of language models in these tasks.
+
         </p>
     </div>
 
-    <div class="affiliations-section">
-        <h2>Affiliations</h2>
-        <div class="affiliations-grid">
-            <div class="affiliation-card">
-                <h3>Neural Computation & Cognition Lab</h3>
-                <p>Institute of Neuroinformatics</p>
-                <p class="institution">ETH Zurich - University of Zurich</p>
-            </div>
-            <div class="affiliation-card">
-                <h3>ETH AI Center</h3>
-                <p>Department of Computer Science</p>
-                <p class="institution">ETH Zurich</p>
-            </div>
-        </div>
+    <div class="team-section">
+        <h2>Members of the G1Bbon team:</h2>
+        <ul>
+            <li>Aydin Javadov</li>
+            <li>Alice Potter</li>
+            <li>Arthur Bigot</li>
+            <li>Daniel Lozano</li>
+            <li>Ekaterina Kozachenko</li>
+            <li>Nandor Kofarago</li>
+            <li>Sarah Verreault</li>
+        </ul>
+    </div>
+
+    <div class="projects-section">
+        <h2>Currently available Semester, Masters and PhD projects:</h2>
+        
+        <p>Your thesis or small project can be focused on one (or multiple) of the topics below:</p>
+        
+        <ol class="projects-list">
+            <li><strong>Expand Task Space:</strong> Develop new Temporal Reasoning Tasks (TRTs) inspired by human and primate cognitive experiments to robustly probe model reasoning capabilities.</li>
+            <li><strong>Adapt and Fine-tune Models:</strong> Fine-tune selected 1B-scale LLMs using human-derived behavioral data (GRPO) to improve their performance.</li>
+            <li><strong>Behavioral Comparison:</strong> Analyze and systematically compare model performance with human and primate behavioral data to uncover similarities and differences in cognitive processing.</li>
+            <li><strong>Develop Interpretability Methods:</strong> Implement novel mechanistic interpretability techniques (e.g., sparse probing, layer-wise activation dynamics, chain-of-thought analyses) to provide deep insights into the evolving representations within the models.</li>
+            <li><strong>Optimize Model Size and Performance:</strong> Develop new techniques to train the smallest language model that achieves the highest possible performance.</li>
+        </ol>
+        
+        <p>This project will allow you to explore the cognitive potential and limitations of language models and your work will lead directly to publishable insights into temporal reasoning, model interpretability, and cross-species cognitive comparisons. You will gain hands-on experience with fine-tuning language models and deployment of experiments in GPU clusters, designing sophisticated cognitive tasks, and developing state-of-the-art mechanistic interpretability methods. Moreover, your efforts will result in co-authorship on relevant publications and substantial contributions to the broader AI and cognitive science communities.</p>
+        
+        <h3>Related works / Preliminary readings:</h3>
+        <ul class="references-list">
+            <li>Binz & Schulz (2022). <a href="https://arxiv.org/abs/2206.14576" target="_blank">Using cognitive psychology to understand GPT-3</a></li>
+            <li>Goldstein et al. (2025). <a href="https://doi.org/10.1038/s41562-025-02105-9" target="_blank">A unified acoustic-to-speech-to-language embedding space captures the neural basis of natural language processing in everyday conversations</a></li>
+            <li>Barbero et al. (2024). <a href="https://arxiv.org/abs/2406.04267" target="_blank">Transformers need glasses! Information over-squashing in language tasks</a></li>
+            <li>Raffel et al. (2020). <a href="https://jmlr.org/papers/v21/20-074.html" target="_blank">Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer</a></li>
+            <li>Wei et al. (2022). <a href="https://arxiv.org/abs/2201.11903" target="_blank">Chain-of-thought prompting elicits reasoning in large language models</a></li>
+        </ul>
     </div>
 
 <style>
@@ -56,11 +78,73 @@
 .goals-section h2,
 .affiliations-section h2,
 .collaborate-section h2,
-.contact-section h2 {
+.contact-section h2,
+.team-section h2,
+.projects-section h2 {
     text-align: left;
     font-size: 1.5rem;
     margin-bottom: 1rem;
     color: var(--text-primary);
+}
+
+.team-section {
+    margin: 3rem 0;
+}
+
+.team-section ul {
+    list-style-type: disc;
+    padding-left: 2rem;
+    margin: 1rem 0;
+}
+
+.team-section li {
+    margin: 0.5rem 0;
+    color: var(--text-secondary);
+}
+
+.projects-section {
+    margin: 3rem 0;
+}
+
+.projects-section h3 {
+    font-size: 1.3rem;
+    margin: 2rem 0 1rem 0;
+    color: var(--text-primary);
+}
+
+.projects-list {
+    list-style-type: decimal;
+    padding-left: 2rem;
+    margin: 1.5rem 0;
+}
+
+.projects-list li {
+    margin: 1rem 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.references-list {
+    list-style-type: disc;
+    padding-left: 2rem;
+    margin: 1rem 0;
+}
+
+.references-list li {
+    margin: 0.8rem 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.references-list a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.references-list a:hover {
+    color: #22c55e;
+    text-decoration: underline;
 }
 
 .goals-grid {

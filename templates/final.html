@@ -2,6 +2,20 @@
 
 {% block content %}
 <div class="final-page-container">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-label">Game Progress</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text">
+            {{ user_progress.games_completed if user_progress else 0 }}/10 games completed
+            {% if user_progress and user_progress.total_score is defined %}
+                | Total Score: {{ user_progress.total_score }}
+            {% endif %}
+        </div>
+    </div>
+
     <div class="game-container">
         <h2>Wich cue was biased towards RED?</h2>
         <form method="post" id="quadrant-form">
@@ -20,9 +34,45 @@
 .final-page-container {
     min-height: calc(100vh - var(--nav-height));
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: calc(var(--nav-height) - -2rem) 1rem 1rem 1rem;
+}
+
+.progress-container {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.progress-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: var(--border-light);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #45a049);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
 }
 
 .final-page-container .game-container {
@@ -34,4 +84,16 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 </style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Progress bar is now handled entirely by server-side rendering - no JavaScript needed
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressFill = document.getElementById('progress-fill');
+        const gamesCompleted = {{ user_progress.games_completed if user_progress else 0 }};
+        const progressPercentage = (gamesCompleted / 10) * 100;
+        progressFill.style.width = progressPercentage + '%';
+    });
+</script>
 {% endblock %}

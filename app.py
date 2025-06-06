@@ -6,6 +6,8 @@ import os
 # Import our custom modules
 from utils.config import SESSION_DIR, debug_log, LOGS_DIR
 from utils.GameLogger import GameLogger
+from utils.UserManager import UserManager
+from utils.NavigationLogger import NavigationLogger
 from utils.VSTtask import VSTtask
 from utils.StatsCalculator import StatsCalculator
 from datetime import datetime, timezone
@@ -24,8 +26,10 @@ app.config.update(
 # Initialize Flask-Session
 #Session(app)
 
-# Initialize the game logger
+# Initialize the loggers and user manager
 game_logger = GameLogger()
+user_manager = UserManager()
+navigation_logger = NavigationLogger()
 
 # Add this function to your app.py
 def test_session_state():
@@ -93,7 +97,17 @@ def introduction():
 def play():
     debug_log("Accessing play page")
     debug_log(f"Current session state: {dict(session)}")
-    return render_template('play.html')
+    
+    # Get or create user and their progress
+    user_info = user_manager.get_or_create_user()
+    progress = user_manager.get_user_game_progress(user_info['user_id'])
+    
+    # Store user info in session
+    session['user_id'] = user_info['user_id']
+    session['user_progress'] = progress
+    session.modified = True
+    
+    return render_template('play.html', user_progress=progress)
 
 @app.route('/human-statistics')
 def human_statistics():
@@ -227,12 +241,28 @@ def test_session():
 @app.route('/start')
 def start():
     try:
-        # Create new game log file
-        game_id, log_filepath = game_logger.create_game_log()
+        # Get user info from session
+        user_id = session.get('user_id')
+        if not user_id:
+            # Get or create user if not in session
+            user_info = user_manager.get_or_create_user()
+            user_id = user_info['user_id']
+            session['user_id'] = user_id
+        
+        # Get user's current game progress
+        progress = user_manager.get_user_game_progress(user_id)
+        current_game_number = progress['games_completed'] + 1
+        
+        # Store the progress at the start of this game (before completion)
+        session['user_progress'] = progress
+        
+        # Create new game log file with user tracking
+        game_id, log_filepath = game_logger.create_game_log(user_id, current_game_number)
         
         # Store absolute filepath in session
         session['game_id'] = game_id
         session['log_filepath'] = log_filepath
+        session['current_game_number'] = current_game_number
         session.modified = True
         
         # Add this debug print
@@ -300,7 +330,8 @@ def round_page(round_number):
             return redirect(url_for('final'))
             
         round_data = game['rounds'][round_number]
-        return render_template('round.html', round_number=round_number, round_data=round_data)
+        user_progress = session.get('user_progress', {'games_completed': 0, 'total_score': 0})
+        return render_template('round.html', round_number=round_number, round_data=round_data, user_progress=user_progress)
     except Exception as e:
         debug_log(f"Error in round_page route: {str(e)}\n{traceback.format_exc()}")
         raise
@@ -339,26 +370,150 @@ def final():
                 success = game_logger.log_choice(log_filepath, result_data)
                 if not success:
                     debug_log("Failed to log final choice")
+                
+                # Record game completion in user database
+                user_id = session.get('user_id')
+                game_id = session.get('game_id')
+                if user_id and game_id:
+                    user_manager.record_game_completion(user_id, game_id, score)
+                    debug_log(f"Recorded game completion for user {user_id}: score {score}")
             else:
                 debug_log("No log_filepath in session for final choice")
                 debug_log(f"Current session: {dict(session)}")
             
             debug_log(f"Game completed - Chosen: {chosen}, Correct: {correct}, Score: {score}")
+            user_progress = session.get('user_progress', {'games_completed': 0, 'total_score': 0})
             return render_template('result.html', chosen=chosen, correct=correct, 
-                                score=score, biased=game['biased_quadrant'])
+                                score=score, biased=game['biased_quadrant'], user_progress=user_progress)
                                 
-        return render_template('final.html', n_quadrants=game['n_quadrants'])
+        user_progress = session.get('user_progress', {'games_completed': 0, 'total_score': 0})
+        return render_template('final.html', n_quadrants=game['n_quadrants'], user_progress=user_progress)
     except Exception as e:
         debug_log(f"Error in final route: {str(e)}\n{traceback.format_exc()}")
         raise
+
+
+# Navigation tracking API endpoints
+@app.route('/api/init_navigation_session', methods=['POST'])
+def init_navigation_session():
+    try:
+        data = request.get_json()
+        
+        # Get or create user
+        user_info = user_manager.get_or_create_user()
+        user_id = user_info['user_id']
+        
+        # Initialize navigation session
+        session_id = navigation_logger.init_user_session(user_id, user_info)
+        
+        return jsonify({
+            'user_id': user_id,
+            'session_id': session_id,
+            'status': 'success'
+        })
+    except Exception as e:
+        debug_log(f"Error initializing navigation session: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/log_page_visit', methods=['POST'])
+def log_page_visit():
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'User ID required'}), 400
+        
+        page_data = {
+            'page': data.get('page'),
+            'url': data.get('url'),
+            'entry_method': data.get('entry_method', 'direct')
+        }
+        
+        success = navigation_logger.log_page_visit(user_id, page_data)
+        
+        if success:
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'error': 'Failed to log page visit'}), 500
+            
+    except Exception as e:
+        debug_log(f"Error logging page visit: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/log_interaction', methods=['POST'])
+def log_interaction():
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'User ID required'}), 400
+        
+        # Remove user_id from data before passing to logger
+        interaction_data = {k: v for k, v in data.items() if k != 'user_id'}
+        
+        success = navigation_logger.log_interaction(user_id, interaction_data)
+        
+        if success:
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'error': 'Failed to log interaction'}), 500
+            
+    except Exception as e:
+        debug_log(f"Error logging interaction: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/end_navigation_session', methods=['POST'])
+def end_navigation_session():
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({'error': 'User ID required'}), 400
+        
+        success = navigation_logger.end_session(user_id)
+        
+        if success:
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'error': 'Failed to end session'}), 500
+            
+    except Exception as e:
+        debug_log(f"Error ending navigation session: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/user_progress', methods=['GET'])
+def get_user_progress():
+    try:
+        # If we're in an active game, use the session-stored progress
+        # This prevents the progress bar from jumping to 100% during a game
+        if session.get('game_id') and session.get('user_progress'):
+            progress = session['user_progress']
+            user_id = session.get('user_id')
+        else:
+            # If no active game, get fresh progress from database
+            user_info = user_manager.get_or_create_user()
+            progress = user_manager.get_user_game_progress(user_info['user_id'])
+            user_id = user_info['user_id']
+        
+        return jsonify({
+            'user_id': user_id,
+            'progress': progress,
+            'status': 'success'
+        })
+    except Exception as e:
+        debug_log(f"Error getting user progress: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
     debug_log("Starting Flask application")
     try:
         app.run(
-            host='127.0.0.1',  # Local host only since Nginx will proxy
-            port=5000,         # Port 5000 as specified in Nginx config
+            host='127.0.0.1',  # Local host only
+            port=5001,         # Port 5001 to avoid conflict with AirTunes
             debug=True         # Set to False in production
         )
     except Exception as e:

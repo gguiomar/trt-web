@@ -2,6 +2,20 @@
 
 {% block content %}
 <div class="round-page-container">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-label">Game Progress</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: {% if user_progress %}{{ (user_progress.games_completed * 10) }}{% else %}0{% endif %}%;"></div>
+        </div>
+        <div class="progress-text">
+            {{ user_progress.games_completed if user_progress else 0 }}/10 games completed
+            {% if user_progress and user_progress.total_score is defined %}
+                | Total Score: {{ user_progress.total_score }}
+            {% endif %}
+        </div>
+    </div>
+
     <div class="game-container">
         <h2>Round {{ round_number + 1 }}</h2>
         <div id="cues" class="queues-{{ round_data.queues|length }}">
@@ -17,25 +31,98 @@
     </div>
 </div>
 
+<style>
+    .round-page-container {
+        min-height: calc(100vh - var(--nav-height));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: calc(var(--nav-height) + 2rem - 200px) 1rem 1rem 1rem;
+    }
+
+    .progress-container {
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .progress-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        background-color: var(--border-light);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4CAF50, #45a049);
+        border-radius: 10px;
+        transition: width 0.3s ease;
+    }
+
+    .progress-text {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .round-page-container .game-container {
+        margin: 0;
+    }
+
+    .cue-button.inactive {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
 <script>
-    var roundNumber = {{ round_number }};
-    var sessionId = "{{ session.get('game_id', '') }}";
+    var roundNumber = parseInt('{{ round_number }}');
+    var sessionId = '{{ session.get("game_id", "") }}';
+    
+    // Progress bar is now handled entirely by server-side CSS - no JavaScript needed
     
     function logChoice(button, cueName, cueColor) {
         var quadrant = button.getAttribute('data-quadrant');
         var timestamp = new Date();
         
-        // Get information about occluded cues
+        // Get information about all cues
         var allCues = document.querySelectorAll('.cue-button');
         var occludedCues = [];
         var activeCues = [];
+        var availableCues = [];
         
         allCues.forEach(function(cue, index) {
             var cueQuadrant = parseInt(cue.getAttribute('data-quadrant'));
-            if (cue.disabled || cue.classList.contains('inactive')) {
-                occludedCues.push(cueQuadrant);
-            } else {
+            var cueColor = cue.getAttribute('data-color');
+            var cueName = cue.textContent.trim().split(' (')[0]; // Remove color suffix if present
+            var isActive = !cue.disabled && !cue.classList.contains('inactive');
+            
+            // Add to available cues array with full information
+            availableCues.push({
+                quadrant: cueQuadrant,
+                name: cueName,
+                color: cueColor,
+                active: isActive
+            });
+            
+            if (isActive) {
                 activeCues.push(cueQuadrant);
+            } else {
+                occludedCues.push(cueQuadrant);
             }
         });
         
@@ -47,6 +134,7 @@
             color: cueColor,
             client_timestamp: timestamp.toISOString(),
             choice_number: document.querySelectorAll('[data-clicked="true"]').length,
+            available_cues: availableCues,
             occluded_cues: occludedCues,
             active_cues: activeCues,
             total_cues: allCues.length
@@ -71,7 +159,7 @@
     }
     
     function goNext() {
-        var nextRound = {{ round_number + 1 }};
+        var nextRound = parseInt('{{ round_number }}') + 1;
         window.location.href = "/round/" + nextRound;
     }
     
@@ -93,24 +181,4 @@
         });
     });
 </script>
-
-<style>
-    .round-page-container {
-        min-height: calc(100vh - var(--nav-height));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: calc(var(--nav-height) + 2rem - 200px) 1rem 1rem 1rem;
-    }
-
-    .round-page-container .game-container {
-        margin: 0;
-    }
-
-    .cue-button.inactive {
-        background-color: #ccc;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-</style>
 {% endblock %}

@@ -11,6 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="{{ url_for('static', filename='js/GameLogger.js') }}"></script>
+    {% if not (request.endpoint in ['round_page', 'start', 'final'] or '/round/' in request.path) %}
+    <script src="{{ url_for('static', filename='js/NavigationTracker.js') }}"></script>
+    {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
 <body>

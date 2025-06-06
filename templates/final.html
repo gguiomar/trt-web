@@ -1,14 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Final Step: Identify the Biased Quadrant</h2>
-<form method="post" id="quadrant-form">
-    <div id="cues" class="queues-{{ n_quadrants }}">
-        {% for q in range(n_quadrants) %}
-            <button type="submit" name="biased_quadrant" value="{{ q }}" class="cue-button">
-                Quadrant {{ q + 1 }}
-            </button>
-        {% endfor %}
+<div class="final-page-container">
+    <div class="game-container">
+        <h2>Wich cue was biased towards RED?</h2>
+        <form method="post" id="quadrant-form">
+            <div id="cues" class="queues-{{ n_quadrants }}">
+                {% for q in range(n_quadrants) %}
+                    <button type="submit" name="biased_quadrant" value="{{ q }}" class="cue-button">
+                        Cue {{ q + 1 }}
+                    </button>
+                {% endfor %}
+            </div>
+        </form>
     </div>
-</form>
+</div>
+
+<style>
+.final-page-container {
+    min-height: calc(100vh - var(--nav-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--nav-height) + 2rem - 189px) 1rem 1rem 1rem;
+}
+
+.final-page-container .game-container {
+    margin: 0;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+</style>
 {% endblock %}

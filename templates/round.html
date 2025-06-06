@@ -1,55 +1,77 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="game-container">
-    <h2>Round {{ round_number + 1 }}</h2>
-    <div id="cues" class="queues-{{ round_data.queues|length }}">
-        {% for cue in round_data.queues %}
-            <button class="cue-button {% if not cue.active %}inactive{% endif %}" 
-                    data-color="{{ cue.color }}" 
-                    data-quadrant="{{ cue.quadrant }}"
-                    {% if not cue.active %}disabled{% endif %}>
-                {{ cue.name }}
-            </button>
-        {% endfor %}
+<div class="round-page-container">
+    <div class="game-container">
+        <h2>Round {{ round_number + 1 }}</h2>
+        <div id="cues" class="queues-{{ round_data.queues|length }}">
+            {% for cue in round_data.queues %}
+                <button class="cue-button {% if not cue.active %}inactive{% endif %}" 
+                        data-color="{{ cue.color }}" 
+                        data-quadrant="{{ cue.quadrant }}"
+                        {% if not cue.active %}disabled{% endif %}>
+                    {% if cue.active %}{{ cue.name }}{% endif %}
+                </button>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
 <script>
     var roundNumber = {{ round_number }};
+    var sessionId = "{{ session.get('game_id', '') }}";
     
     function logChoice(button, cueName, cueColor) {
-        const quadrant = button.getAttribute('data-quadrant');
-        const timestamp = new Date();
+        var quadrant = button.getAttribute('data-quadrant');
+        var timestamp = new Date();
         
-        const logData = {
+        // Get information about occluded cues
+        var allCues = document.querySelectorAll('.cue-button');
+        var occludedCues = [];
+        var activeCues = [];
+        
+        allCues.forEach(function(cue, index) {
+            var cueQuadrant = parseInt(cue.getAttribute('data-quadrant'));
+            if (cue.disabled || cue.classList.contains('inactive')) {
+                occludedCues.push(cueQuadrant);
+            } else {
+                activeCues.push(cueQuadrant);
+            }
+        });
+        
+        var logData = {
             type: 'choice',
             round: roundNumber,
             quadrant: parseInt(quadrant),
             cue_name: cueName,
             color: cueColor,
             client_timestamp: timestamp.toISOString(),
-            choice_number: document.querySelectorAll('[data-clicked="true"]').length
+            choice_number: document.querySelectorAll('[data-clicked="true"]').length,
+            occluded_cues: occludedCues,
+            active_cues: activeCues,
+            total_cues: allCues.length
         };
 
         fetch('/log_choice', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'X-Session-ID': '{{ session.get("game_id", "") }}'
+                'X-Session-ID': sessionId
             },
             body: JSON.stringify(logData)
         })
-        .then(response => {
+        .then(function(response) {
             if (!response.ok) {
                 console.error("Logging failed");
             }
         })
-        .catch(error => console.error("Logging error:", error));
+        .catch(function(error) {
+            console.error("Logging error:", error);
+        });
     }
     
     function goNext() {
-        let nextRound = {{ round_number + 1 }};
+        var nextRound = {{ round_number + 1 }};
         window.location.href = "/round/" + nextRound;
     }
     
@@ -57,8 +79,8 @@
         button.addEventListener('click', function() {
             if (this.getAttribute('data-clicked') === 'true') return;
             
-            let color = this.getAttribute('data-color');
-            let cueName = this.textContent.trim();
+            var color = this.getAttribute('data-color');
+            var cueName = this.textContent.trim();
             
             this.style.backgroundColor = color.toLowerCase();
             this.textContent += " (" + color + ")";
@@ -73,6 +95,18 @@
 </script>
 
 <style>
+    .round-page-container {
+        min-height: calc(100vh - var(--nav-height));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: calc(var(--nav-height) + 2rem - 189px) 1rem 1rem 1rem;
+    }
+
+    .round-page-container .game-container {
+        margin: 0;
+    }
+
     .cue-button.inactive {
         background-color: #ccc;
         cursor: not-allowed;

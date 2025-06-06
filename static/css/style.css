@@ -1,19 +1,19 @@
 /* Global styles */
 :root {
-    --background-light: #ffffff;
-    --background-dark: #f5f5f5;
-    --background-darker: #f0f0f0;
-    --text-primary: #1a1a1a;
-    --text-secondary: #4a4a4a;
-    --text-light: #767676;
-    --accent-blue: #3065EC;
-    --accent-light-blue: #eef3ff;
-    --success-green: #38b000;
-    --error-red: #e63946;
-    --button-hover: #2255cc;
-    --card-background: #ffffff;
-    --border-light: #e5e5e5;
-    --highlight-color: rgba(48, 101, 236, 0.1);
+    --background-light: #1a1a1a;
+    --background-dark: #2a2a2a;
+    --background-darker: #333333;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-light: #999999;
+    --accent-blue: #4080ff;
+    --accent-light-blue: #1a2332;
+    --success-green: #4ade80;
+    --error-red: #f87171;
+    --button-hover: #3366dd;
+    --card-background: #2a2a2a;
+    --border-light: #404040;
+    --highlight-color: rgba(64, 128, 255, 0.1);
     --nav-height: 70px;
 }
 
@@ -61,8 +61,8 @@ body {
 }
 
 .site-header.scrolled {
-    background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(26, 26, 26, 0.95);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 }
 
 .site-logo {
@@ -298,13 +298,16 @@ p {
 /* Game container */
 .game-container {
     background-color: var(--card-background);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
+    width: fit-content;
+    max-width: 400px;
+    margin: calc(var(--nav-height) + 2rem) auto 2rem auto;
     border: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Cue button styles */
@@ -312,14 +315,20 @@ p {
     background-color: var(--background-light);
     color: var(--text-primary);
     border: 1px solid var(--border-light);
-    padding: 1.2rem 1.8rem;
-    margin: 0.5rem;
-    font-size: 1rem;
+    width: 140px;
+    height: 140px;
+    margin: 0;
+    font-size: 1.1rem;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-weight: 500;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    min-height: 140px;
 }
 
 .cue-button:hover:not(:disabled) {
@@ -354,8 +363,9 @@ p {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    max-width: 520px;
+    width: 300px;
     margin: 2rem auto;
+    justify-items: center;
 }
 
 /* Result styles */
@@ -373,7 +383,7 @@ p {
 .content-section {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: calc(var(--nav-height) + 2rem) 1rem 2rem 1rem;
 }
 
 .stats-grid {
@@ -390,7 +400,7 @@ p {
     text-align: center;
     transition: transform 0.2s ease;
     border: 1px solid var(--border-light);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .stats-card:hover {
@@ -468,7 +478,7 @@ p {
     border-radius: 8px;
     padding: 2rem;
     border: 1px solid var(--border-light);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease;
 }
 
@@ -510,9 +520,9 @@ p {
         left: 0;
         right: 0;
         flex-direction: column;
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: rgba(26, 26, 26, 0.95);
         padding: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
     
     .nav-links.active {
@@ -545,6 +555,11 @@ p {
 
     .game-container, .stats-card, .affiliation-card {
         padding: 1.5rem;
+        margin: calc(var(--nav-height) + 1rem) 1rem 1rem 1rem;
+    }
+    
+    .content-section {
+        padding: calc(var(--nav-height) + 1rem) 1rem 1rem 1rem;
     }
     
     .leaderboard-table {
@@ -554,5 +569,63 @@ p {
     .leaderboard-table th, 
     .leaderboard-table td {
         padding: 0.8rem;
+    }
+    
+    /* Mobile-specific cue button adjustments */
+    .cue-button {
+        width: 100px;
+        height: 100px;
+        margin: 0.3rem;
+        font-size: 0.9rem;
+        min-width: 100px;
+        min-height: 100px;
+    }
+    
+    /* Ensure proper spacing for mobile game layout */
+    #cues.queues-4 {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        max-width: 100%;
+    }
+    
+    /* Mobile play page adjustments */
+    div[style*="min-height: 60vh"] {
+        min-height: calc(100vh - var(--nav-height)) !important;
+        padding-top: calc(var(--nav-height) + 1rem);
+    }
+}
+
+/* Additional mobile optimization for very small screens */
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+    
+    .game-container {
+        margin: calc(var(--nav-height) + 0.5rem) 0.5rem 0.5rem 0.5rem;
+        padding: 1rem;
+    }
+    
+    .content-section {
+        padding: calc(var(--nav-height) + 0.5rem) 0.5rem 0.5rem 0.5rem;
+    }
+    
+    .cue-button {
+        width: 80px;
+        height: 80px;
+        font-size: 0.85rem;
+        min-width: 80px;
+        min-height: 80px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 0.6rem 0.4rem;
+        font-size: 0.8rem;
     }
 }

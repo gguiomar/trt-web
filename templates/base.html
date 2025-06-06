@@ -26,8 +26,7 @@
             <ul class="nav-links">
                 <li><a href="{{ url_for('introduction') }}" class="nav-link {% if request.endpoint == 'introduction' %}active{% endif %}">Introduction</a></li>
                 <li><a href="{{ url_for('play') }}" class="nav-link {% if request.endpoint == 'play' %}active{% endif %}">Play</a></li>
-                <li><a href="{{ url_for('human_statistics') }}" class="nav-link {% if request.endpoint == 'human_statistics' %}active{% endif %}">Human Statistics</a></li>
-                <li><a href="{{ url_for('llm_leaderboard') }}" class="nav-link {% if request.endpoint == 'llm_leaderboard' %}active{% endif %}">LLM Leaderboard</a></li>
+                <li><a href="{{ url_for('statistics') }}" class="nav-link {% if request.endpoint == 'statistics' %}active{% endif %}">Benchmark</a></li>
                 <li><a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">About Us</a></li>
             </ul>
         </nav>

@@ -1,20 +1,99 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center;">
-    <h1 style="font-size: 2rem; margin-bottom: 2rem;">Temporal Reasoning Task</h1>
-    
-    <div style="max-width: 800px; margin: 0 auto;">
-        <p style="font-size: 1rem; margin-bottom: 1.5rem;">
-            In this game you will see several rounds where buttons (cues) appear.
-        </p>
-        <p style="font-size: 1rem; margin-bottom: 1.5rem;">
-            Click each button to reveal its color.
-        </p>
-    </div>
-    
-    <div style="margin-top: 2rem;">
-        <a href="{{ url_for('start') }}" class="button">Start Game</a>
+<div class="play-page-container">
+    <div class="play-content-box">
+        <h1>Temporal Reasoning Task</h1>
+        
+        <div class="instructions">
+            <p>In this game you will see several rounds where buttons (cues) appear.</p>
+            <p>Each button will reveal a color when clicked.</p>
+            <p>Your task is to determine which cue contains a bias towards RED.</p>
+            <p>Some cues might be occluded in the game which will force you to rely on the cues that are visible.</p>
+            <p>In the final round you'll be asked which one was the biased cue.</p>
+        </div>
+        
+        <div class="start-button-container">
+            <a href="{{ url_for('start') }}" class="button">Start Game</a>
+        </div>
     </div>
 </div>
+
+<style>
+.play-page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--nav-height));
+    padding: calc(var(--nav-height) + 2rem - 189px) 2rem 2rem 2rem;
+}
+
+.play-content-box {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.play-content-box h1 {
+    font-size: 2rem;
+    margin-bottom: 1.8rem;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.instructions {
+    margin-bottom: 2rem;
+}
+
+.instructions p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    text-align: center;
+    max-width: none;
+}
+
+.start-button-container {
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .play-page-container {
+        padding: calc(var(--nav-height) + 0.5rem) 1rem 1rem 1rem;
+    }
+    
+    .play-content-box {
+        padding: 1rem;
+    }
+    
+    .play-content-box h1 {
+        font-size: 1.7rem;
+    }
+    
+    .instructions p {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .play-content-box {
+        padding: 1.5rem;
+    }
+    
+    .play-content-box h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .instructions p {
+        font-size: 0.9rem;
+    }
+}
+</style>
 {% endblock %}

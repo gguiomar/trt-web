@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-section">
+    <h1>G1Bbon Benchmark</h1>
+    
+    <!-- Human Performance Section -->
+    <div class="stats-section">
+        <h2>Human Performance</h2>
+        
+        <div class="stats-grid">
+            <div class="stats-card">
+                <h3>Overall Performance</h3>
+                <div class="stat-value">{{ success_rate if success_rate is defined else '75' }}%</div>
+                <p>Average Success Rate</p>
+            </div>
+            
+            <div class="stats-card">
+                <h3>Total Games</h3>
+                <div class="stat-value">{{ total_games if total_games is defined else '1,247' }}</div>
+                <p>Games Completed</p>
+            </div>
+            
+            <div class="stats-card">
+                <h3>Average Time</h3>
+                <div class="stat-value">{{ avg_duration if avg_duration is defined else '3.2' }}</div>
+                <p>Minutes per Game</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LLM Leaderboard Section -->
+    <div class="stats-section">
+        <h2>LLM Leaderboard</h2>
+
+        <div class="text-section">
+            <p>
+                Although the leaderboard is geared towards 1B LLMs, we show the current performance of all models in the G1Bbon benchmark.
+                As we continue to collect more data, we will update the leaderboard to reflect the latest scores only for the 1B models.
+            </p>
+        </div>
+        
+        <!-- 4 Quadrants Benchmark Table -->
+        <div class="leaderboard-container">
+            <h3>G1Bbon Benchmark (4 Quadrants)</h3>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Model</th>
+                        <th>Aggregated Mean Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>Qwen_78_Instruct</td><td>0.34 - 0.36</td></tr>
+                    <tr><td>2</td><td>Centaur_88</td><td>0.32 - 0.34</td></tr>
+                    <tr><td>3</td><td>gpt40_mini</td><td>0.29 - 0.31</td></tr>
+                    <tr><td>4</td><td>gpt40</td><td>0.25 - 0.27</td></tr>
+                    <tr><td>5</td><td>Qwen_3B_Instruct</td><td>0.22 - 0.24</td></tr>
+                    <tr><td>6</td><td>Qwen_3B</td><td>0.20 - 0.22</td></tr>
+                    <tr><td>7</td><td>Qwen_1B</td><td>0.18 - 0.20</td></tr>
+                    <tr><td>8</td><td>Qwen_7B</td><td>0.16 - 0.18</td></tr>
+                    <tr><td>9</td><td>Deepseek_R1_7B_Qwen</td><td>0.14 - 0.16</td></tr>
+                    <tr><td>10</td><td>Deepseek_R1_1B_Owen</td><td>0.10 - 0.12</td></tr>
+                    <tr><td>11</td><td>Owen_1B_Instruct</td><td>0.08 - 0.10</td></tr>
+                    <tr><td>12</td><td>Deepseek_R1_8B_Llama</td><td>0.04 - 0.06</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.stats-section {
+    margin: 3rem 0;
+}
+
+.stats-section h2 {
+    text-align: left;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.stats-section h3 {
+    text-align: left;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.text-section {
+    margin: 1.5rem 0;
+}
+
+.text-section p {
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    text-align: left;
+}
+
+/* Mobile adjustments for statistics page */
+@media (max-width: 768px) {
+    .stats-section h2 {
+        font-size: 1.6rem;
+    }
+    
+    .stats-section h3 {
+        font-size: 1.2rem;
+    }
+}
+</style>
+{% endblock %}

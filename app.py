@@ -172,6 +172,7 @@ def about():
     return render_template('about.html')
 
 
+
 @app.route('/')
 def index():
     debug_log("Accessing index page")

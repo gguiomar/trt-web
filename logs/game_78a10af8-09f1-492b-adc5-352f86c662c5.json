@@ -1,0 +1,272 @@
+{
+  "game_id": "78a10af8-09f1-492b-adc5-352f86c662c5",
+  "user_id": "user_e8abbdb03966b46c",
+  "game_number": 3,
+  "start_time": "2025-06-08T14:13:44.196944+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 1,
+      "cue_name": "B",
+      "color": "RED",
+      "timestamp": "2025-06-08T14:13:45.056Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A",
+          "color": "GREEN",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "B\n                ",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 2,
+          "name": "C",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 3,
+          "name": "D",
+          "color": "GREEN",
+          "active": true
+        }
+      ],
+      "occluded_cues": [],
+      "active_cues": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "total_cues": 4
+    },
+    {
+      "round": 1,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-06-08T14:13:46.220Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A\n                ",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "B",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 2,
+          "name": "",
+          "color": "GREEN",
+          "active": false
+        },
+        {
+          "quadrant": 3,
+          "name": "",
+          "color": "RED",
+          "active": false
+        }
+      ],
+      "occluded_cues": [
+        2,
+        3
+      ],
+      "active_cues": [
+        0,
+        1
+      ],
+      "total_cues": 4
+    },
+    {
+      "round": 2,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-06-08T14:13:47.516Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A\n                ",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "",
+          "color": "RED",
+          "active": false
+        },
+        {
+          "quadrant": 2,
+          "name": "",
+          "color": "RED",
+          "active": false
+        },
+        {
+          "quadrant": 3,
+          "name": "D",
+          "color": "GREEN",
+          "active": true
+        }
+      ],
+      "occluded_cues": [
+        1,
+        2
+      ],
+      "active_cues": [
+        0,
+        3
+      ],
+      "total_cues": 4
+    },
+    {
+      "round": 3,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-06-08T14:13:48.666Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A\n                ",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "B",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 2,
+          "name": "C",
+          "color": "GREEN",
+          "active": true
+        },
+        {
+          "quadrant": 3,
+          "name": "D",
+          "color": "RED",
+          "active": true
+        }
+      ],
+      "occluded_cues": [],
+      "active_cues": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "total_cues": 4
+    },
+    {
+      "round": 4,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "GREEN",
+      "timestamp": "2025-06-08T14:13:49.565Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A\n                ",
+          "color": "GREEN",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "B",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 2,
+          "name": "C",
+          "color": "GREEN",
+          "active": true
+        },
+        {
+          "quadrant": 3,
+          "name": "D",
+          "color": "GREEN",
+          "active": true
+        }
+      ],
+      "occluded_cues": [],
+      "active_cues": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "total_cues": 4
+    },
+    {
+      "round": 5,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "GREEN",
+      "timestamp": "2025-06-08T14:13:50.848Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A\n                ",
+          "color": "GREEN",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "",
+          "color": "RED",
+          "active": false
+        },
+        {
+          "quadrant": 2,
+          "name": "C",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 3,
+          "name": "D",
+          "color": "RED",
+          "active": true
+        }
+      ],
+      "occluded_cues": [
+        1
+      ],
+      "active_cues": [
+        0,
+        2,
+        3
+      ],
+      "total_cues": 4
+    }
+  ],
+  "final_choice": {
+    "chosen_quadrant": 0,
+    "correct": false,
+    "score": -100,
+    "biased_quadrant": 1
+  },
+  "completion_time": "2025-06-08T14:13:52.884581+00:00",
+  "total_duration": 8.687637,
+  "success": false
+}

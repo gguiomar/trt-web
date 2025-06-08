@@ -2,8 +2,8 @@
   "user_id": "user_e8abbdb03966b46c",
   "sessions": [
     {
-      "session_id": "session_1_2025-06-06T02:45:51.905911+00:00",
-      "session_start": "2025-06-06T02:45:51.905911+00:00",
+      "session_id": "session_1_2025-06-06T03:08:05.102140+00:00",
+      "session_start": "2025-06-06T03:08:05.102140+00:00",
       "session_end": null,
       "total_session_duration": 0,
       "user_metadata": {
@@ -40,10 +40,10 @@
       }
     },
     {
-      "session_id": "session_2_2025-06-06T02:45:51.907282+00:00",
-      "session_start": "2025-06-06T02:45:51.907282+00:00",
-      "session_end": "2025-06-06T02:46:13.474319+00:00",
-      "total_session_duration": 21.567037,
+      "session_id": "session_2_2025-06-06T03:08:05.106393+00:00",
+      "session_start": "2025-06-06T03:08:05.106393+00:00",
+      "session_end": "2025-06-06T03:08:07.215696+00:00",
+      "total_session_duration": 2.109303,
       "user_metadata": {
         "user_id": "user_e8abbdb03966b46c",
         "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
@@ -52,24 +52,74 @@
         "device_type": "desktop",
         "browser": "chrome"
       },
-      "navigation_sequence": [],
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "introduction",
+          "url": "/introduction",
+          "timestamp": "2025-06-06T03:08:07.084193+00:00",
+          "entry_method": "direct",
+          "time_on_page": 0.131503,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:08:07.087673+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1555,
+                "y": 37
+              },
+              "scroll_position": 0,
+              "link_text": "Play",
+              "link_href": "http://127.0.0.1:5001/play",
+              "link_target": "_self",
+              "is_external": false
+            },
+            {
+              "type": "click",
+              "timestamp": "2025-06-06T03:08:07.192570+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1555,
+                "y": 37,
+                "element_x": 1536.4375,
+                "element_y": 18.203125
+              },
+              "scroll_position": 0
+            }
+          ]
+        }
+      ],
       "page_summary": {
-        "pages_visited": [],
-        "unique_pages": 0,
-        "total_page_views": 0,
-        "most_visited_page": null,
-        "entry_page": null,
-        "exit_page": null,
-        "bounce_rate": false,
+        "pages_visited": [
+          "introduction"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "introduction",
+        "entry_page": "introduction",
+        "exit_page": "introduction",
+        "bounce_rate": true,
         "conversion_funnel": {}
       },
       "interaction_summary": {
-        "total_clicks": 0,
+        "total_clicks": 1,
         "total_scrolls": 0,
-        "total_link_clicks": 0,
-        "average_time_per_page": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 0.131503,
         "click_heatmap": [],
-        "link_click_summary": []
+        "link_click_summary": [
+          {
+            "link_text": "Play",
+            "link_href": "http://127.0.0.1:5001/play",
+            "count": 1
+          }
+        ]
       },
       "traversal_graph": {
         "nodes": [],
@@ -78,8 +128,8 @@
       }
     },
     {
-      "session_id": "session_3_2025-06-06T02:46:13.588601+00:00",
-      "session_start": "2025-06-06T02:46:13.588601+00:00",
+      "session_id": "session_3_2025-06-06T03:08:07.315830+00:00",
+      "session_start": "2025-06-06T03:08:07.315830+00:00",
       "session_end": null,
       "total_session_duration": 0,
       "user_metadata": {
@@ -116,10 +166,84 @@
       }
     },
     {
-      "session_id": "session_4_2025-06-06T02:46:13.592103+00:00",
-      "session_start": "2025-06-06T02:46:13.592103+00:00",
-      "session_end": "2025-06-06T02:46:19.874508+00:00",
-      "total_session_duration": 6.282405,
+      "session_id": "session_4_2025-06-06T03:08:07.319183+00:00",
+      "session_start": "2025-06-06T03:08:07.319183+00:00",
+      "session_end": "2025-06-06T03:08:08.378323+00:00",
+      "total_session_duration": 1.05914,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "play",
+          "url": "/play",
+          "timestamp": "2025-06-06T03:08:08.337862+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.040461,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:08:08.344002+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1628,
+                "y": 39
+              },
+              "scroll_position": 0,
+              "link_text": "Benchmark",
+              "link_href": "http://127.0.0.1:5001/statistics",
+              "link_target": "_self",
+              "is_external": false
+            }
+          ]
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "play"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "play",
+        "entry_page": "play",
+        "exit_page": "play",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 0.040461,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "Benchmark",
+            "link_href": "http://127.0.0.1:5001/statistics",
+            "count": 1
+          }
+        ]
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_5_2025-06-06T03:08:08.434876+00:00",
+      "session_start": "2025-06-06T03:08:08.434876+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
       "user_metadata": {
         "user_id": "user_e8abbdb03966b46c",
         "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
@@ -146,6 +270,1499 @@
         "average_time_per_page": 0,
         "click_heatmap": [],
         "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_6_2025-06-06T03:08:08.438784+00:00",
+      "session_start": "2025-06-06T03:08:08.438784+00:00",
+      "session_end": "2025-06-06T03:08:10.604436+00:00",
+      "total_session_duration": 2.165652,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "statistics",
+          "url": "/statistics",
+          "timestamp": "2025-06-06T03:08:10.571091+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.020173,
+          "scroll_depth": 0,
+          "interactions": []
+        },
+        {
+          "sequence_id": 2,
+          "page": "statistics",
+          "url": "/statistics",
+          "timestamp": "2025-06-06T03:08:10.591264+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.013172,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "statistics"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 2,
+        "most_visited_page": "statistics",
+        "entry_page": "statistics",
+        "exit_page": "statistics",
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0.0166725,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [
+          "statistics"
+        ],
+        "edges": [
+          {
+            "from": "statistics",
+            "to": "statistics",
+            "count": 1,
+            "avg_time": 0.020173
+          }
+        ],
+        "paths": [
+          {
+            "path": [
+              "statistics",
+              "statistics"
+            ],
+            "frequency": 1,
+            "total_time": 0.033345
+          }
+        ]
+      }
+    },
+    {
+      "session_id": "session_7_2025-06-06T03:08:10.651796+00:00",
+      "session_start": "2025-06-06T03:08:10.651796+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_8_2025-06-06T03:08:10.653270+00:00",
+      "session_start": "2025-06-06T03:08:10.653270+00:00",
+      "session_end": "2025-06-06T03:08:12.682249+00:00",
+      "total_session_duration": 2.028979,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:08:12.582644+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.607214,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:08:12.714616+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": null,
+              "coordinates": {
+                "x": 821,
+                "y": 274
+              },
+              "scroll_position": 0,
+              "link_text": "Gon\u00e7alo Guiomar",
+              "link_href": "https://gguiomar.github.io/",
+              "link_target": "_blank",
+              "is_external": true
+            }
+          ]
+        },
+        {
+          "sequence_id": 2,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:08:13.189858+00:00",
+          "entry_method": "link",
+          "time_on_page": 0,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "click",
+              "timestamp": "2025-06-06T03:08:13.209531+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": null,
+              "coordinates": {
+                "x": 821,
+                "y": 274,
+                "element_x": 714.203125,
+                "element_y": 255.296875
+              },
+              "scroll_position": 0
+            }
+          ]
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "about"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 2,
+        "most_visited_page": "about",
+        "entry_page": "about",
+        "exit_page": "about",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 1,
+        "total_scrolls": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 0.099605,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "Gon\u00e7alo Guiomar",
+            "link_href": "https://gguiomar.github.io/",
+            "count": 1
+          }
+        ]
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_9_2025-06-06T03:08:13.221228+00:00",
+      "session_start": "2025-06-06T03:08:13.221228+00:00",
+      "session_end": "2025-06-06T03:08:13.983994+00:00",
+      "total_session_duration": 0.762766,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:08:14.567648+00:00",
+          "entry_method": "link",
+          "time_on_page": 0,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "about"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": null,
+        "entry_page": "about",
+        "exit_page": "about",
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_10_2025-06-06T03:08:14.589200+00:00",
+      "session_start": "2025-06-06T03:08:14.589200+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_11_2025-06-06T03:08:14.617708+00:00",
+      "session_start": "2025-06-06T03:08:14.617708+00:00",
+      "session_end": "2025-06-06T03:08:15.346237+00:00",
+      "total_session_duration": 0.728529,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_12_2025-06-06T03:08:15.840943+00:00",
+      "session_start": "2025-06-06T03:08:15.840943+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:08:15.850423+00:00",
+          "entry_method": "link",
+          "time_on_page": 0,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "about"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": null,
+        "entry_page": "about",
+        "exit_page": "about",
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_13_2025-06-06T03:08:15.857448+00:00",
+      "session_start": "2025-06-06T03:08:15.857448+00:00",
+      "session_end": "2025-06-06T03:08:17.052737+00:00",
+      "total_session_duration": 1.195289,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:08:17.365177+00:00",
+          "entry_method": "link",
+          "time_on_page": 0,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "about"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": null,
+        "entry_page": "about",
+        "exit_page": "about",
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_14_2025-06-06T03:08:17.370784+00:00",
+      "session_start": "2025-06-06T03:08:17.370784+00:00",
+      "session_end": "2025-06-06T03:08:18.305845+00:00",
+      "total_session_duration": 0.935061,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_15_2025-06-06T03:08:18.650615+00:00",
+      "session_start": "2025-06-06T03:08:18.650615+00:00",
+      "session_end": "2025-06-06T03:10:44.488088+00:00",
+      "total_session_duration": 145.837473,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:08:18.660607+00:00",
+          "entry_method": "link",
+          "time_on_page": 145.860967,
+          "scroll_depth": 1.0006353240152477,
+          "interactions": [
+            {
+              "type": "scroll",
+              "timestamp": "2025-06-06T03:08:27.018681+00:00",
+              "element_type": null,
+              "element_id": null,
+              "element_class": null,
+              "coordinates": {},
+              "scroll_position": 769
+            },
+            {
+              "type": "scroll",
+              "timestamp": "2025-06-06T03:08:27.481670+00:00",
+              "element_type": null,
+              "element_id": null,
+              "element_class": null,
+              "coordinates": {},
+              "scroll_position": 787.5
+            },
+            {
+              "type": "scroll",
+              "timestamp": "2025-06-06T03:08:28.282331+00:00",
+              "element_type": null,
+              "element_id": null,
+              "element_class": null,
+              "coordinates": {},
+              "scroll_position": 640.5
+            }
+          ]
+        },
+        {
+          "sequence_id": 2,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:10:44.521574+00:00",
+          "entry_method": "link",
+          "time_on_page": 0,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "about"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 2,
+        "most_visited_page": "about",
+        "entry_page": "about",
+        "exit_page": "about",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 3,
+        "total_link_clicks": 0,
+        "average_time_per_page": 145.827481,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_16_2025-06-06T03:10:44.544334+00:00",
+      "session_start": "2025-06-06T03:10:44.544334+00:00",
+      "session_end": "2025-06-06T03:10:44.640130+00:00",
+      "total_session_duration": 0.095796,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_17_2025-06-06T03:10:45.933870+00:00",
+      "session_start": "2025-06-06T03:10:45.933870+00:00",
+      "session_end": "2025-06-06T03:10:46.089632+00:00",
+      "total_session_duration": 0.155762,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:10:45.952622+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.13701,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "about"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "about",
+        "entry_page": "about",
+        "exit_page": "about",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0.13701,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_18_2025-06-06T03:10:46.104637+00:00",
+      "session_start": "2025-06-06T03:10:46.104637+00:00",
+      "session_end": "2025-06-06T03:10:46.447933+00:00",
+      "total_session_duration": 0.343296,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "about",
+          "url": "/about",
+          "timestamp": "2025-06-06T03:10:46.124563+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.32337,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "about"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "about",
+        "entry_page": "about",
+        "exit_page": "about",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0.32337,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_19_2025-06-06T03:10:46.470366+00:00",
+      "session_start": "2025-06-06T03:10:46.470366+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_20_2025-06-06T03:10:46.472973+00:00",
+      "session_start": "2025-06-06T03:10:46.472973+00:00",
+      "session_end": "2025-06-06T03:10:46.824292+00:00",
+      "total_session_duration": 0.351319,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_21_2025-06-06T03:10:58.612736+00:00",
+      "session_start": "2025-06-06T03:10:58.612736+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_22_2025-06-06T03:10:58.616211+00:00",
+      "session_start": "2025-06-06T03:10:58.616211+00:00",
+      "session_end": "2025-06-06T03:11:00.438850+00:00",
+      "total_session_duration": 1.822639,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "introduction",
+          "url": "/introduction",
+          "timestamp": "2025-06-06T03:11:00.307199+00:00",
+          "entry_method": "direct",
+          "time_on_page": 0.131651,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:11:00.344746+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1548,
+                "y": 34
+              },
+              "scroll_position": 0,
+              "link_text": "Play",
+              "link_href": "http://127.0.0.1:5001/play",
+              "link_target": "_self",
+              "is_external": false
+            },
+            {
+              "type": "click",
+              "timestamp": "2025-06-06T03:11:00.385642+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1548,
+                "y": 34,
+                "element_x": 1536.4375,
+                "element_y": 18.203125
+              },
+              "scroll_position": 0
+            }
+          ]
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "introduction"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "introduction",
+        "entry_page": "introduction",
+        "exit_page": "introduction",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 1,
+        "total_scrolls": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 0.131651,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "Play",
+            "link_href": "http://127.0.0.1:5001/play",
+            "count": 1
+          }
+        ]
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_23_2025-06-06T03:11:00.524637+00:00",
+      "session_start": "2025-06-06T03:11:00.524637+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_24_2025-06-06T03:11:00.526722+00:00",
+      "session_start": "2025-06-06T03:11:00.526722+00:00",
+      "session_end": "2025-06-06T03:11:01.676560+00:00",
+      "total_session_duration": 1.149838,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "play",
+          "url": "/play",
+          "timestamp": "2025-06-06T03:11:01.626679+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.013702,
+          "scroll_depth": 0,
+          "interactions": []
+        },
+        {
+          "sequence_id": 2,
+          "page": "play",
+          "url": "/play",
+          "timestamp": "2025-06-06T03:11:01.640381+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.036179,
+          "scroll_depth": 0,
+          "interactions": []
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "play"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 2,
+        "most_visited_page": "play",
+        "entry_page": "play",
+        "exit_page": "play",
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0.0249405,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [
+          "play"
+        ],
+        "edges": [
+          {
+            "from": "play",
+            "to": "play",
+            "count": 1,
+            "avg_time": 0.013702
+          }
+        ],
+        "paths": [
+          {
+            "path": [
+              "play",
+              "play"
+            ],
+            "frequency": 1,
+            "total_time": 0.049881
+          }
+        ]
+      }
+    },
+    {
+      "session_id": "session_25_2025-06-06T03:11:01.714261+00:00",
+      "session_start": "2025-06-06T03:11:01.714261+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_26_2025-06-06T03:11:01.717967+00:00",
+      "session_start": "2025-06-06T03:11:01.717967+00:00",
+      "session_end": "2025-06-06T03:11:03.232251+00:00",
+      "total_session_duration": 1.514284,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "introduction",
+          "url": "/introduction",
+          "timestamp": "2025-06-06T03:11:03.151276+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.080975,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:11:03.212903+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": null,
+              "coordinates": {
+                "x": 1529,
+                "y": 905
+              },
+              "scroll_position": 0,
+              "link_text": "Gon\u00e7alo Guiomar",
+              "link_href": "https://gguiomar.github.io/",
+              "link_target": "_blank",
+              "is_external": true
+            },
+            {
+              "type": "click",
+              "timestamp": "2025-06-06T03:11:04.211173+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": null,
+              "coordinates": {
+                "x": 1529,
+                "y": 905,
+                "element_x": 1478.2578125,
+                "element_y": 899
+              },
+              "scroll_position": 0
+            }
+          ]
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "introduction"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "introduction",
+        "entry_page": "introduction",
+        "exit_page": "introduction",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 1,
+        "total_scrolls": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 0.080975,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "Gon\u00e7alo Guiomar",
+            "link_href": "https://gguiomar.github.io/",
+            "count": 1
+          }
+        ]
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_27_2025-06-06T03:11:04.614240+00:00",
+      "session_start": "2025-06-06T03:11:04.614240+00:00",
+      "session_end": "2025-06-06T03:11:05.991215+00:00",
+      "total_session_duration": 1.376975,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "introduction",
+          "url": "/introduction",
+          "timestamp": "2025-06-06T03:11:04.646905+00:00",
+          "entry_method": "link",
+          "time_on_page": 1.34431,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "click",
+              "timestamp": "2025-06-06T03:11:05.905245+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1562,
+                "y": 39,
+                "element_x": 1536.4375,
+                "element_y": 18.203125
+              },
+              "scroll_position": 0
+            },
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:11:05.925871+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1562,
+                "y": 39
+              },
+              "scroll_position": 0,
+              "link_text": "Play",
+              "link_href": "http://127.0.0.1:5001/play",
+              "link_target": "_self",
+              "is_external": false
+            }
+          ]
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "introduction"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "introduction",
+        "entry_page": "introduction",
+        "exit_page": "introduction",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 1,
+        "total_scrolls": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 1.34431,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "Play",
+            "link_href": "http://127.0.0.1:5001/play",
+            "count": 1
+          }
+        ]
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_28_2025-06-06T03:11:06.084723+00:00",
+      "session_start": "2025-06-06T03:11:06.084723+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_29_2025-06-06T03:11:06.111092+00:00",
+      "session_start": "2025-06-06T03:11:06.111092+00:00",
+      "session_end": "2025-06-06T03:11:06.783733+00:00",
+      "total_session_duration": 0.672641,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "play",
+          "url": "/play",
+          "timestamp": "2025-06-06T03:11:06.720153+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.06358,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:11:06.742153+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1618,
+                "y": 31
+              },
+              "scroll_position": 0,
+              "link_text": "Benchmark",
+              "link_href": "http://127.0.0.1:5001/statistics",
+              "link_target": "_self",
+              "is_external": false
+            }
+          ]
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "play"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "play",
+        "entry_page": "play",
+        "exit_page": "play",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 0.06358,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "Benchmark",
+            "link_href": "http://127.0.0.1:5001/statistics",
+            "count": 1
+          }
+        ]
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_30_2025-06-06T03:11:06.873509+00:00",
+      "session_start": "2025-06-06T03:11:06.873509+00:00",
+      "session_end": null,
+      "total_session_duration": 0,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [],
+      "page_summary": {
+        "pages_visited": [],
+        "unique_pages": 0,
+        "total_page_views": 0,
+        "most_visited_page": null,
+        "entry_page": null,
+        "exit_page": null,
+        "bounce_rate": false,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 0,
+        "average_time_per_page": 0,
+        "click_heatmap": [],
+        "link_click_summary": []
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    },
+    {
+      "session_id": "session_31_2025-06-06T03:11:06.879834+00:00",
+      "session_start": "2025-06-06T03:11:06.879834+00:00",
+      "session_end": "2025-06-06T03:11:07.766983+00:00",
+      "total_session_duration": 0.887149,
+      "user_metadata": {
+        "user_id": "user_e8abbdb03966b46c",
+        "ip_hash": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "user_agent_hash": "2ffbadfc736d4f562cc7b84eea8a5cd445f57f7fdb0681e487d75615ed090497",
+        "returning_user": true,
+        "device_type": "desktop",
+        "browser": "chrome"
+      },
+      "navigation_sequence": [
+        {
+          "sequence_id": 1,
+          "page": "statistics",
+          "url": "/statistics",
+          "timestamp": "2025-06-06T03:11:07.715538+00:00",
+          "entry_method": "link",
+          "time_on_page": 0.051445,
+          "scroll_depth": 0,
+          "interactions": [
+            {
+              "type": "link_click",
+              "timestamp": "2025-06-06T03:11:07.723124+00:00",
+              "element_type": "a",
+              "element_id": null,
+              "element_class": "nav-link ",
+              "coordinates": {
+                "x": 1707,
+                "y": 33
+              },
+              "scroll_position": 0,
+              "link_text": "About Us",
+              "link_href": "http://127.0.0.1:5001/about",
+              "link_target": "_self",
+              "is_external": false
+            }
+          ]
+        }
+      ],
+      "page_summary": {
+        "pages_visited": [
+          "statistics"
+        ],
+        "unique_pages": 1,
+        "total_page_views": 1,
+        "most_visited_page": "statistics",
+        "entry_page": "statistics",
+        "exit_page": "statistics",
+        "bounce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 1,
+        "average_time_per_page": 0.051445,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "About Us",
+            "link_href": "http://127.0.0.1:5001/about",
+            "count": 1
+          }
+        ]
+      },
+      "traversal_graph": {
+        "nodes": [],
+        "edges": [],
+        "paths": []
+      }
+    }
+  ]
+}ce_rate": true,
+        "conversion_funnel": {}
+      },
+      "interaction_summary": {
+        "total_clicks": 0,
+        "total_scrolls": 0,
+        "total_link_clicks": 2,
+        "average_time_per_page": 0.052727,
+        "click_heatmap": [],
+        "link_click_summary": [
+          {
+            "link_text": "About Us",
+            "link_href": "http://127.0.0.1:5001/about",
+            "count": 2
+          }
+        ]
       },
       "traversal_graph": {
         "nodes": [],

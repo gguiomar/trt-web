@@ -44,6 +44,56 @@ class UserManager:
             )
         ''')
         
+        # Create navigation tables
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS navigation_sessions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id TEXT NOT NULL,
+                session_start TIMESTAMP NOT NULL,
+                session_end TIMESTAMP,
+                total_duration REAL,
+                device_type TEXT,
+                browser TEXT,
+                FOREIGN KEY (user_id) REFERENCES users (user_id)
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS page_visits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id INTEGER NOT NULL,
+                page TEXT NOT NULL,
+                url TEXT NOT NULL,
+                timestamp TIMESTAMP NOT NULL,
+                entry_method TEXT,
+                time_on_page REAL,
+                scroll_depth REAL DEFAULT 0,
+                FOREIGN KEY (session_id) REFERENCES navigation_sessions (id)
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS interactions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id INTEGER NOT NULL,
+                page_visit_id INTEGER NOT NULL,
+                type TEXT NOT NULL,
+                timestamp TIMESTAMP NOT NULL,
+                element_type TEXT,
+                element_id TEXT,
+                element_class TEXT,
+                coordinates_x INTEGER,
+                coordinates_y INTEGER,
+                scroll_position REAL,
+                link_text TEXT,
+                link_href TEXT,
+                link_target TEXT,
+                is_external BOOLEAN,
+                FOREIGN KEY (session_id) REFERENCES navigation_sessions (id),
+                FOREIGN KEY (page_visit_id) REFERENCES page_visits (id)
+            )
+        ''')
+        
         conn.commit()
         conn.close()
     

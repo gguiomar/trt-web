@@ -1,0 +1,101 @@
+{
+  "game_id": "12d96219-0522-49ee-9c50-ce5fa01cb186",
+  "user_id": "user_e8abbdb03966b46c",
+  "game_number": 9,
+  "start_time": "2025-06-08T14:13:00.652620+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 2,
+      "cue_name": "C",
+      "color": "RED",
+      "timestamp": "2025-06-08T14:13:01.634Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A",
+          "color": "GREEN",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "B",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 2,
+          "name": "C\n                ",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 3,
+          "name": "D",
+          "color": "GREEN",
+          "active": true
+        }
+      ],
+      "occluded_cues": [],
+      "active_cues": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "total_cues": 4
+    },
+    {
+      "round": 1,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "RED",
+      "timestamp": "2025-06-08T14:13:02.755Z",
+      "choice_number": 1,
+      "available_cues": [
+        {
+          "quadrant": 0,
+          "name": "A\n                ",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 1,
+          "name": "B",
+          "color": "RED",
+          "active": true
+        },
+        {
+          "quadrant": 2,
+          "name": "C",
+          "color": "GREEN",
+          "active": true
+        },
+        {
+          "quadrant": 3,
+          "name": "D",
+          "color": "RED",
+          "active": true
+        }
+      ],
+      "occluded_cues": [],
+      "active_cues": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "total_cues": 4
+    }
+  ],
+  "final_choice": {
+    "chosen_quadrant": 1,
+    "correct": true,
+    "score": 100,
+    "biased_quadrant": 1
+  },
+  "completion_time": "2025-06-08T14:13:04.111991+00:00",
+  "total_duration": 3.459371,
+  "success": true
+}

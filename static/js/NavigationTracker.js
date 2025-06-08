@@ -133,7 +133,7 @@ class NavigationTracker {
         this.maxScrollDepth = 0;
         
         try {
-            await fetch('/api/log_page_visit', {
+            const response = await fetch('/api/log_page_visit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -145,8 +145,14 @@ class NavigationTracker {
                     entry_method: this.getEntryMethod()
                 })
             });
+            
+            if (!response.ok) {
+                console.error('Page visit logging failed:', response.status);
+                this.currentPage = null; // Reset so interactions will retry
+            }
         } catch (error) {
             console.error('Error logging page visit:', error);
+            this.currentPage = null; // Reset so interactions will retry
         }
     }
     
@@ -168,6 +174,13 @@ class NavigationTracker {
     async handleClick(event) {
         if (this.isGamePage || !this.userId) {
             return;
+        }
+        
+        // Ensure page visit is logged first
+        if (!this.currentPage) {
+            await this.logPageVisit();
+            // Small delay to ensure page visit is processed
+            await new Promise(resolve => setTimeout(resolve, 50));
         }
         
         const element = event.target;
@@ -209,8 +222,18 @@ class NavigationTracker {
         const link = event.target.tagName === 'A' ? event.target : event.target.closest('a');
         if (!link) return;
         
+        // For external links or links that open in new tabs, log immediately without waiting
         const href = link.href;
         const isExternal = !href.includes(window.location.hostname);
+        const opensInNewTab = link.target === '_blank';
+        
+        // Ensure page visit is logged first, but with shorter timeout for external links
+        if (!this.currentPage) {
+            await this.logPageVisit();
+            // Shorter delay for external links since they won't navigate away
+            const delay = opensInNewTab || isExternal ? 10 : 50;
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
         
         const linkData = {
             user_id: this.userId,
@@ -229,13 +252,33 @@ class NavigationTracker {
         };
         
         try {
-            await fetch('/api/log_interaction', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(linkData)
-            });
+            // For external links, use sendBeacon for more reliable logging
+            if (opensInNewTab || isExternal) {
+                // Use sendBeacon for external links as it's more reliable
+                if (navigator.sendBeacon) {
+                    const blob = new Blob([JSON.stringify(linkData)], {type: 'application/json'});
+                    navigator.sendBeacon('/api/log_interaction', blob);
+                } else {
+                    // Fallback to regular fetch
+                    fetch('/api/log_interaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(linkData),
+                        keepalive: true
+                    });
+                }
+            } else {
+                // Regular internal links
+                await fetch('/api/log_interaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(linkData)
+                });
+            }
         } catch (error) {
             console.error('Error logging link click:', error);
         }

@@ -4,42 +4,45 @@
 <div class="content-section">
     <h1>About Us</h1>
 
-    <div class="us-section">
-        <p>
-            The G1Bbon benchmark was developed by  
-            <strong><a href="https://gguiomar.github.io" target="_blank">Gonçalo Guiomar</a></strong>,  
-            <strong><a href="https://eliatorre.com" target="_blank">Elia Torre</a></strong>,  
-            <strong><a href="https://glnmario.github.io" target="_blank">Mario Giulianelli</a></strong> and 
-            <strong><a href="https://services.ini.uzh.ch/admin/modules/uzh/person.php?id=51859" target="_blank">Victoria Shavina</a></strong>  
-            at <strong>University of Zurich</strong> and <strong>ETH Zurich</strong> under the supervision of
-            <strong><a href="https://www.ini.uzh.ch/en/research/groups/mante.html" target="_blank">Prof. Valerio Mante</a></strong> 
-        </p>
-    </div>
+    <div class="intro-section">
+        <div class="intro-content">
+            <div class="intro-text">
+                <div class="us-section">
+                    <p>
+                        The G1Bbon benchmark was developed by  
+                        <strong><a href="https://gguiomar.github.io" target="_blank">Gonçalo Guiomar</a></strong>,  
+                        <strong><a href="https://eliatorre.com" target="_blank">Elia Torre</a></strong>,  
+                        <strong><a href="https://glnmario.github.io" target="_blank">Mario Giulianelli</a></strong> and 
+                        <strong><a href="https://services.ini.uzh.ch/admin/modules/uzh/person.php?id=51859" target="_blank">Victoria Shavina</a></strong>  
+                        at <strong>University of Zurich</strong> and <strong>ETH Zurich</strong> under the supervision of
+                        <strong><a href="https://www.ini.uzh.ch/en/research/groups/mante.html" target="_blank">Prof. Valerio Mante</a></strong> 
+                    </p>
+                </div>
 
-    <div class="about-section">
-        <p>
-            The Temporal Reasoning Task is a research platform designed to investigate how different agents - both human and artificial -
-            solve interactive tasks. Our aim is to understanding the underlying mechanisms involved in temporal reasoning and pattern recognition, 
-            and to develop benchmarks that can be used to evaluate the performance of language models in these tasks.
-
-        </p>
+                <div class="about-section">
+                    <p>
+                        The Temporal Reasoning Task is a research platform designed to investigate how different agents - both human and artificial -
+                        solve interactive tasks. Our aim is to understanding the underlying mechanisms involved in temporal reasoning and pattern recognition, 
+                        and to develop benchmarks that can be used to evaluate the performance of language models in these tasks.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="intro-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="G1Bbon Logo" class="about-logo">
+            </div>
+        </div>
     </div>
 
     <div class="team-section">
-        <h2>Student members of the G1Bbon team:</h2>
+        <h2>Current student members of the G1Bbon team:</h2>
         <ul>
-            <li>Aydin Javadov</li>
-            <li>Alice Potter</li>
-            <li>Arthur Bigot</li>
-            <li>Daniel Lozano</li>
-            <li>Ekaterina Kozachenko</li>
-            <li>Nandor Kofarago</li>
-            <li>Sarah Verreault</li>
+            <li>Aydin Javadov, Alice Potter, Arthur Bigot, Daniel Lozano, Ekaterina Kozachenko, Nandor Kofarago, Sarah Verreault</li>
         </ul>
     </div>
 
     <div class="projects-section">
-        <h2>Currently available Semester, Masters and PhD projects:</h2>
+        <h2>Semester, Masters and PhD projects in ETH, UZH</h2>
         
         <p>Your thesis or small project can be focused on one (or multiple) of the topics below:</p>
         
@@ -58,7 +61,6 @@
             <li>Binz & Schulz (2022). <a href="https://arxiv.org/abs/2206.14576" target="_blank">Using cognitive psychology to understand GPT-3</a></li>
             <li>Goldstein et al. (2025). <a href="https://doi.org/10.1038/s41562-025-02105-9" target="_blank">A unified acoustic-to-speech-to-language embedding space captures the neural basis of natural language processing in everyday conversations</a></li>
             <li>Barbero et al. (2024). <a href="https://arxiv.org/abs/2406.04267" target="_blank">Transformers need glasses! Information over-squashing in language tasks</a></li>
-            <li>Raffel et al. (2020). <a href="https://jmlr.org/papers/v21/20-074.html" target="_blank">Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer</a></li>
             <li>Wei et al. (2022). <a href="https://arxiv.org/abs/2201.11903" target="_blank">Chain-of-thought prompting elicits reasoning in large language models</a></li>
         </ul>
     </div>
@@ -70,8 +72,54 @@
     padding: calc(2rem + 113px) 2rem 2rem 2rem;
 }
 
-.about-section {
+.intro-section {
     margin-bottom: 3rem;
+}
+
+.intro-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.intro-text {
+    flex: 1;
+}
+
+.intro-logo {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.about-logo {
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.about-section {
+    margin-bottom: 0;
+}
+
+/* Mobile adjustments for intro section */
+@media (max-width: 768px) {
+    .intro-content {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .intro-logo {
+        justify-content: center;
+    }
+    
+    .about-logo {
+        max-width: 150px;
+    }
 }
 
 .about-section h2, 

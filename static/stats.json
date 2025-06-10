@@ -1,7 +1,7 @@
 {
-  "total_games": 204,
-  "success_rate": 66.66666666666666,
-  "average_duration": 22.912512352941178,
+  "total_games": 221,
+  "success_rate": 66.9683257918552,
+  "average_duration": 22.829246674208147,
   "performance_distribution": {
     "bins": [
       -100,
@@ -11,10 +11,10 @@
       100
     ],
     "counts": [
-      68,
+      73,
       0,
       0,
-      136
+      148
     ]
   },
   "learning_curve": {
@@ -24,8 +24,8 @@
       48.0,
       64.0,
       78.0,
-      100.0
+      76.19047619047619
     ]
   },
-  "last_updated": "2025-05-21T12:18:00.554151"
+  "last_updated": "2025-06-03T10:00:21.042867"
 }

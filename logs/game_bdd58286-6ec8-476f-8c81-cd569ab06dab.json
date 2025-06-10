@@ -1,0 +1,18 @@
+{
+  "game_id": "bdd58286-6ec8-476f-8c81-cd569ab06dab",
+  "start_time": "2025-06-03T10:00:07.394318+00:00",
+  "choices": [
+    {
+      "round": 0,
+      "quadrant": 0,
+      "cue_name": "A",
+      "color": "GREEN",
+      "timestamp": "2025-06-03T10:00:20.884Z",
+      "choice_number": 1
+    }
+  ],
+  "final_choice": null,
+  "completion_time": null,
+  "total_duration": null,
+  "success": null
+}

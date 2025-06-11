@@ -32,7 +32,10 @@ class VSTtask:
         return random.choice(['RED', 'GREEN'])
 
     def _generate_rounds(self):
-        while True:
+        max_attempts = 100  # Prevent infinite loops
+        attempt = 0
+        
+        while attempt < max_attempts:
             rounds = []
             for _ in range(self.n_rounds):
                 # Determine number of active cues for this round (2 to max)
@@ -54,10 +57,18 @@ class VSTtask:
                 for idx in active_indices:
                     all_cues[idx]['active'] = True
                 
-                rounds.append({'queues': all_cues})
-                
-            if self._validate_rounds([r['queues'] for r in rounds]):
+                rounds.append({'cues': all_cues})
+            
+            # Validate the rounds
+            if self._validate_rounds([r['cues'] for r in rounds]):
+                debug_log(f"Generated {len(rounds)} rounds successfully after {attempt + 1} attempts")
                 return rounds
+            
+            attempt += 1
+        
+        # If we can't generate valid rounds after max_attempts, return what we have
+        debug_log(f"Warning: Could not generate valid rounds after {max_attempts} attempts, using last attempt")
+        return rounds
 
     def _validate_rounds(self, rounds):
         color_counts = {q: {'RED': 0, 'GREEN': 0} for q in self.quadrants}

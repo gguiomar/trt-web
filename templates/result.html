@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--nav-height)); text-align: center; padding-top: calc(var(--nav-height));">
+<div class="result-page-container">
     <!-- Progress Bar -->
     <div class="progress-container">
         <div class="progress-label">Game Progress</div>
@@ -19,23 +19,30 @@
     <div class="result-container">
         <h1>Game Result</h1>
         
-        <p style="font-size: 1rem; margin: 2rem 0;">You chose Cue {{ chosen + 1 }}.</p>
-        
-        <p style="font-size: 1rem; margin: 2rem 0;">The biased cue was Cue {{ biased + 1 }}.</p>
-        
         {% if correct %}
-            <p class="result-correct" style="font-size: 1rem;">Correct! You earned +100 points.</p>
+            <h2 class="result-correct">Correct! You earned +100 points.</h2>
         {% else %}
-            <p class="result-incorrect" style="font-size: 1rem;">Incorrect. You lost -100 points.</p>
+            <h2 class="result-incorrect">Incorrect. You lost -100 points.</h2>
         {% endif %}
         
-        <div style="margin-top: 3rem;">
+        <p style="font-size: 1rem; text-align: center !important; margin: 2rem 0;">You chose {{ chr(65 + chosen) }}. The biased cue was {{ chr(65 + biased) }}.</p>
+        
+        <div style="margin-top: 2rem;">
             <a href="{{ url_for('play') }}" class="button">Play Again</a>
         </div>
     </div>
 </div>
 
 <style>
+.result-page-container {
+    min-height: calc(100vh - var(--nav-height));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--nav-height) + 2rem) 1rem 1rem 1rem;
+}
+
 .progress-container {
     width: 100%;
     max-width: 600px;
@@ -75,10 +82,57 @@
     background-color: var(--card-background);
     border: 1px solid var(--border-light);
     border-radius: 12px;
-    padding: 3rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem;
     max-width: 500px;
-    margin: 0 1rem;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.result-container h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.result-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .result-page-container {
+        padding: calc(var(--nav-height) + 0.5rem) 1rem 1rem 1rem;
+    }
+    
+    .result-container {
+        padding: 1.5rem;
+    }
+    
+    .result-container h1 {
+        font-size: 1.7rem;
+    }
+    
+    .result-container h2 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .result-container {
+        padding: 1.5rem;
+    }
+    
+    .result-container h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .result-container h2 {
+        font-size: 1.2rem;
+    }
 }
 </style>
 {% endblock %}
@@ -95,6 +149,8 @@
             const progressPercentage = (gamesCompleted / 10) * 100;
             progressFill.style.width = progressPercentage + '%';
         }
+        
+        // No auto-redirect - user must click "Play Again" button
     });
 </script>
 {% endblock %}

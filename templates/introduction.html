@@ -155,9 +155,10 @@ body {
     background-color: rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
     border-radius: 4px;
-    white-space: nowrap;
     display: inline-block;
     margin-left: auto;
+    max-width: 100%;
+    word-wrap: break-word;
 }
 
 .attribution-text a {
@@ -192,11 +193,37 @@ body {
     .attribution-overlay {
         margin-top: -2rem;
         padding: 0 0.5rem;
+        text-align: center;
     }
     
     .attribution-text {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         padding: 0.4rem;
+        text-align: center;
+        margin-left: 0;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content {
+        padding: 0 1rem;
+    }
+    
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+    
+    .attribution-overlay {
+        padding: 0 0.25rem;
+    }
+    
+    .attribution-text {
+        font-size: 0.6rem;
+        padding: 0.3rem;
+        line-height: 1.3;
     }
 }
 </style>

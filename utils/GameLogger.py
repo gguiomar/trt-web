@@ -15,16 +15,15 @@ class GameLogger:
         filename = f"game_{game_id}.json"
         filepath = os.path.join(self.logs_dir, filename)
         
-        # Initialize log file with metadata
+        # Initialize log file with simple structure
         game_data = {
             'game_id': game_id,
             'user_id': user_id,
-            'game_number': game_number,  # 1-10 for tracking progress
+            'game_number': game_number,
             'start_time': datetime.now(timezone.utc).isoformat(),
-            'choices': [],  # Will store all intermediate choices
+            'rounds': [],  # Will store round-by-round data in simple format
             'final_choice': None,
             'completion_time': None,
-            'total_duration': None,
             'success': None
         }
         
@@ -33,8 +32,27 @@ class GameLogger:
         
         return game_id, filepath
 
+    def save_game_data(self, filepath, game_data):
+        """Save complete game data to JSON file"""
+        try:
+            with open(filepath, 'w') as f:
+                json.dump(game_data, f, indent=2)
+            return True
+        except Exception as e:
+            print(f"Error saving game data: {str(e)}")
+            return False
+    
+    def load_game_data(self, filepath):
+        """Load game data from JSON file"""
+        try:
+            with open(filepath, 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading game data: {str(e)}")
+            return None
+
     def log_choice(self, filepath, data):
-        """Log a choice during the game"""
+        """Log a choice during the game in simple format"""
         try:
             with open(filepath, 'r') as f:
                 game_data = json.load(f)
@@ -42,17 +60,12 @@ class GameLogger:
             if data.get('type') == 'final_choice':
                 # Log the final choice
                 game_data['final_choice'] = {
-                    'chosen_quadrant': data['chosen_quadrant'],
+                    'chosen_cue': data.get('chosen_cue', data.get('chosen_quadrant')),
                     'correct': data['correct'],
                     'score': data['score'],
-                    'biased_quadrant': data['biased_quadrant']
+                    'biased_cue': data.get('biased_cue', data.get('biased_quadrant'))
                 }
                 game_data['completion_time'] = datetime.now(timezone.utc).isoformat()
-                
-                # Calculate total duration
-                start_time = datetime.fromisoformat(game_data['start_time'])
-                end_time = datetime.fromisoformat(game_data['completion_time'])
-                game_data['total_duration'] = (end_time - start_time).total_seconds()
                 game_data['success'] = data['correct']
                 
                 # Record game completion in user database if user_id exists
@@ -68,20 +81,20 @@ class GameLogger:
                     except Exception as e:
                         print(f"Error recording game completion for user: {str(e)}")
             else:
-                # Log intermediate choice
-                choice_data = {
+                # Log round choice in simple format
+                round_data = {
                     'round': data['round'],
-                    'quadrant': data['quadrant'],
-                    'cue_name': data['cue_name'],
+                    'available_cues': data.get('available_cues', []),  # Use from frontend
+                    'chosen_cue': data.get('chosen_cue', data.get('cue_name')),
                     'color': data['color'],
-                    'timestamp': data['client_timestamp'],
-                    'choice_number': data.get('choice_number', len(game_data['choices']) + 1),
-                    'available_cues': data.get('available_cues', []),
-                    'occluded_cues': data.get('occluded_cues', []),
-                    'active_cues': data.get('active_cues', []),
-                    'total_cues': data.get('total_cues', 0)
+                    'quadrant': data.get('quadrant'),
+                    'timestamp': data['client_timestamp']
                 }
-                game_data['choices'].append(choice_data)
+                
+                if 'rounds' not in game_data:
+                    game_data['rounds'] = []
+                
+                game_data['rounds'].append(round_data)
             
             # Save updated game data
             with open(filepath, 'w') as f:

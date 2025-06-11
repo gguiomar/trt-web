@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="round-page-container">
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--nav-height)); text-align: center; padding-top: calc(var(--nav-height) + 2rem);" class="round-page-container">
     <!-- Progress Bar -->
     <div class="progress-container">
         <div class="progress-label">Game Progress</div>
         <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill" style="width: {% if user_progress %}{{ (user_progress.games_completed * 10) }}{% else %}0{% endif %}%;"></div>
+            <div class="progress-fill" id="progress-fill"></div>
         </div>
         <div class="progress-text">
             {{ user_progress.games_completed if user_progress else 0 }}/10 games completed
@@ -18,167 +18,184 @@
 
     <div class="game-container">
         <h2>Round {{ round_number + 1 }}</h2>
-        <div id="cues" class="queues-{{ round_data.queues|length }}">
-            {% for cue in round_data.queues %}
-                <button class="cue-button {% if not cue.active %}inactive{% endif %}" 
-                        data-color="{{ cue.color }}" 
-                        data-quadrant="{{ cue.quadrant }}"
-                        {% if not cue.active %}disabled{% endif %}>
+
+        <div id="cues" class="queues-{{ round_data.cues|length }}">
+            {% for cue in round_data.cues %}
+                <button 
+                    class="cue-button {% if not cue.active %}inactive{% endif %}" 
+                    data-quadrant="{{ cue.quadrant }}" 
+                    data-name="{{ cue.name }}" 
+                    data-color="{{ cue.color }}"
+                    {% if not cue.active %}disabled{% endif %}
+                    onclick="selectCue(this)">
                     {% if cue.active %}{{ cue.name }}{% endif %}
                 </button>
             {% endfor %}
         </div>
+        <p>Click on an active cue (inactive cues are grayed out)</p>
+        
+        <div id="message" style="margin-top: 1rem; min-height: 2rem;"></div>
     </div>
 </div>
 
 <style>
+.progress-container {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.progress-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: var(--border-light);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.1rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #45a049);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.game-container {
+    margin-top: 0.5rem;
+}
+
+.game-container h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.inactive {
+    background-color: #cccccc !important;
+    color: transparent !important;
+    cursor: not-allowed !important;
+    opacity: 1;
+}
+
+/* Mobile adjustments for round page */
+@media (max-width: 768px) {
     .round-page-container {
-        min-height: calc(100vh - var(--nav-height));
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: calc(var(--nav-height) + 2rem - 200px) 1rem 1rem 1rem;
+        padding-top: calc(var(--nav-height) + -0.5rem) !important;
+        justify-content: flex-start !important;
+        padding-bottom: 1rem !important;
     }
-
-    .progress-container {
-        width: 100%;
-        max-width: 600px;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-
-    .progress-label {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
-    }
-
-    .progress-bar {
-        width: 100%;
-        height: 20px;
-        background-color: var(--border-light);
-        border-radius: 10px;
-        overflow: hidden;
-        margin-bottom: 0.5rem;
-    }
-
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #4CAF50, #45a049);
-        border-radius: 10px;
-        transition: width 0.3s ease;
-    }
-
-    .progress-text {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-    }
-
-    .round-page-container .game-container {
-        margin: 0;
-    }
-
-    .cue-button.inactive {
-        background-color: #ccc;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
+}
 </style>
+
+<!-- Hidden data for JavaScript -->
+<script type="application/json" id="page-data">
+{
+    "roundNumber": {{ round_number }},
+    "gamesCompleted": {{ user_progress.games_completed if user_progress else 0 }}
+}
+</script>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    var roundNumber = parseInt('{{ round_number }}');
-    var sessionId = '{{ session.get("game_id", "") }}';
-    
-    // Progress bar is now handled entirely by server-side CSS - no JavaScript needed
-    
-    function logChoice(button, cueName, cueColor) {
+    // Progress bar setup
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageData = JSON.parse(document.getElementById('page-data').textContent);
+        const progressFill = document.getElementById('progress-fill');
+        const gamesCompleted = pageData.gamesCompleted;
+        const progressPercentage = (gamesCompleted / 10) * 100;
+        progressFill.style.width = progressPercentage + '%';
+    });
+
+    function selectCue(button) {
+        if (button.disabled) return;
+        
+        const pageData = JSON.parse(document.getElementById('page-data').textContent);
+        var roundNumber = pageData.roundNumber;
         var quadrant = button.getAttribute('data-quadrant');
-        var timestamp = new Date();
+        var cueName = button.getAttribute('data-name');
+        var cueColor = button.getAttribute('data-color');
         
-        // Get information about all cues
+        // Mark button as clicked and reveal the color
+        button.setAttribute('data-clicked', 'true');
+        if (cueColor === 'RED') {
+            button.style.backgroundColor = '#FF0000';
+            button.style.color = 'white';
+        } else if (cueColor === 'GREEN') {
+            button.style.backgroundColor = '#44ff44';
+            button.style.color = 'black';
+        }
+        
+        // Disable all buttons
         var allCues = document.querySelectorAll('.cue-button');
-        var occludedCues = [];
-        var activeCues = [];
-        var availableCues = [];
+        allCues.forEach(function(cue) {
+            cue.disabled = true;
+        });
         
-        allCues.forEach(function(cue, index) {
-            var cueQuadrant = parseInt(cue.getAttribute('data-quadrant'));
-            var cueColor = cue.getAttribute('data-color');
-            var cueName = cue.textContent.trim().split(' (')[0]; // Remove color suffix if present
-            var isActive = !cue.disabled && !cue.classList.contains('inactive');
-            
-            // Add to available cues array with full information
-            availableCues.push({
-                quadrant: cueQuadrant,
-                name: cueName,
-                color: cueColor,
-                active: isActive
-            });
-            
-            if (isActive) {
-                activeCues.push(cueQuadrant);
-            } else {
-                occludedCues.push(cueQuadrant);
+        // Create available cues list - get all active cues from this round
+        var availableCueNames = [];
+        allCues.forEach(function(cue) {
+            if (!cue.classList.contains('inactive')) {
+                var name = cue.getAttribute('data-name');
+                availableCueNames.push(name);
             }
         });
+        
+        console.log('Available cues found:', availableCueNames);
+        
+        var timestamp = new Date();
         
         var logData = {
             type: 'choice',
-            round: roundNumber,
-            quadrant: parseInt(quadrant),
-            cue_name: cueName,
+            round: roundNumber + 1,  // Make it 1-indexed for clarity
+            available_cues: availableCueNames,  // Simple array like ["A", "C", "D"]
+            chosen_cue: cueName,
             color: cueColor,
-            client_timestamp: timestamp.toISOString(),
-            choice_number: document.querySelectorAll('[data-clicked="true"]').length,
-            available_cues: availableCues,
-            occluded_cues: occludedCues,
-            active_cues: activeCues,
-            total_cues: allCues.length
+            quadrant: parseInt(quadrant),  // Add quadrant info
+            client_timestamp: timestamp.toISOString()
         };
-
+        
+        console.log('Logging data:', logData);
+        
+        // Send to server
         fetch('/log_choice', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-Session-ID': sessionId
+            headers: {
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(logData)
         })
-        .then(function(response) {
-            if (!response.ok) {
-                console.error("Logging failed");
-            }
+        .then(response => response.text())
+        .then(data => {
+            console.log('Server response:', data);
+            
+            // Move to next round after showing color for 0.5 seconds
+            setTimeout(function() {
+                var nextRound = roundNumber + 1;
+                window.location.href = '/round/' + nextRound;
+            }, 500);
         })
-        .catch(function(error) {
-            console.error("Logging error:", error);
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('message').innerHTML = 'Error logging choice. Please try again.';
+            // Re-enable buttons on error
+            allCues.forEach(function(cue) {
+                cue.disabled = false;
+            });
         });
     }
-    
-    function goNext() {
-        var nextRound = parseInt('{{ round_number }}') + 1;
-        window.location.href = "/round/" + nextRound;
-    }
-    
-    document.querySelectorAll('.cue-button:not(.inactive)').forEach(function(button) {
-        button.addEventListener('click', function() {
-            if (this.getAttribute('data-clicked') === 'true') return;
-            
-            var color = this.getAttribute('data-color');
-            var cueName = this.textContent.trim();
-            
-            this.style.backgroundColor = color.toLowerCase();
-            this.textContent += " (" + color + ")";
-            this.setAttribute('data-clicked', 'true');
-            
-            logChoice(this, cueName, color);
-            
-            // Add delay before next round
-            setTimeout(goNext, 500);
-        });
-    });
 </script>
 {% endblock %}

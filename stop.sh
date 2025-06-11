@@ -1,30 +1,36 @@
 #!/bin/bash
 
-echo "Stopping all server processes..."
+echo "Stopping VST application..."
 
-# Kill Flask processes
+# Activate conda environment for consistency
+source /home/vst/miniconda3/etc/profile.d/conda.sh
+conda activate vst
+
+# Kill gunicorn processes
+echo "Stopping gunicorn processes..."
+pkill -f gunicorn || true
+
+# Kill any direct Flask processes
 echo "Stopping Flask processes..."
 pkill -f "python app.py" || true
 
-# Function to check if a service exists
-service_exists() {
-    systemctl list-units --full -all | grep -Fq "$1"
-}
+# Kill any conda environment python processes running the app
+echo "Stopping any conda environment Flask processes..."
+pkill -f "/home/vst/miniconda3/envs/vst/bin/python.*app.py" || true
 
-# Stop system services if they exist
-if service_exists "flask.service"; then
-    echo "Stopping Flask service..."
-    sudo systemctl stop flask
+# Wait for processes to stop
+sleep 2
+
+# Check if any processes are still running
+if pgrep -f gunicorn > /dev/null; then
+    echo "⚠️  Some gunicorn processes are still running"
+    ps aux | grep gunicorn | grep -v grep
+    echo ""
+    echo "To force kill remaining processes, run:"
+    echo "  pkill -9 -f gunicorn"
+else
+    echo "✓ All VST application processes stopped"
 fi
 
-if service_exists "apache2.service"; then
-    echo "Stopping Apache..."
-    sudo systemctl stop apache2 || sudo service apache2 stop
-fi
-
-if service_exists "nginx.service"; then
-    echo "Stopping Nginx..."
-    sudo systemctl stop nginx || sudo service nginx stop
-fi
-
-echo "All server processes have been stopped."
+echo ""
+echo "🛑 VST application shutdown complete."

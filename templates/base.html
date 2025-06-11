@@ -11,9 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="{{ url_for('static', filename='js/GameLogger.js') }}"></script>
-    {% if not (request.endpoint in ['round_page', 'start', 'final'] or '/round/' in request.path) %}
-    <script src="{{ url_for('static', filename='js/NavigationTracker.js') }}"></script>
-    {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -25,7 +22,8 @@
         </a>
         
         <nav class="site-nav">
-            <button class="mobile-menu-button" aria-label="Toggle menu">☰</button>
+            <input type="checkbox" id="mobile-menu-toggle" class="mobile-menu-toggle">
+            <label for="mobile-menu-toggle" class="mobile-menu-button" aria-label="Toggle menu">☰</label>
             <ul class="nav-links">
                 <li><a href="{{ url_for('introduction') }}" class="nav-link {% if request.endpoint == 'introduction' %}active{% endif %}">Introduction</a></li>
                 <li><a href="{{ url_for('play') }}" class="nav-link {% if request.endpoint == 'play' %}active{% endif %}">Play</a></li>
@@ -48,15 +46,61 @@
             ReactDOM.render(React.createElement(GameLogger), loggerContainer);
         }
         
-        // Mobile menu toggle
-        const mobileMenuButton = document.querySelector('.mobile-menu-button');
-        const navLinks = document.querySelector('.nav-links');
-        
-        if (mobileMenuButton) {
-            mobileMenuButton.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
-            });
-        }
+        // Mobile menu toggle with debugging
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up mobile menu...');
+            
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const navLinks = document.querySelector('.nav-links');
+            
+            console.log('Mobile button found:', !!mobileMenuButton);
+            console.log('Nav links found:', !!navLinks);
+            
+            if (mobileMenuButton && navLinks) {
+                console.log('Setting up mobile menu event listener...');
+                
+                mobileMenuButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('Mobile menu button clicked!');
+                    navLinks.classList.toggle('active');
+                    
+                    const isActive = navLinks.classList.contains('active');
+                    console.log('Menu is now:', isActive ? 'OPEN' : 'CLOSED');
+                    
+                    // Force display for debugging
+                    if (isActive) {
+                        navLinks.style.display = 'flex';
+                    } else {
+                        navLinks.style.display = 'none';
+                    }
+                });
+                
+                // Close menu when clicking on a link
+                const navLinksItems = navLinks.querySelectorAll('.nav-link');
+                navLinksItems.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('active');
+                        navLinks.style.display = 'none';
+                        console.log('Menu closed via link click');
+                    });
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!mobileMenuButton.contains(e.target) && !navLinks.contains(e.target)) {
+                        navLinks.classList.remove('active');
+                        navLinks.style.display = 'none';
+                        console.log('Menu closed via outside click');
+                    }
+                });
+                
+                console.log('Mobile menu setup complete!');
+            } else {
+                console.error('Mobile menu elements not found!');
+            }
+        });
         
         // Navbar color change on scroll
         window.addEventListener('scroll', function() {

@@ -11,19 +11,19 @@
         <div class="stats-grid">
             <div class="stats-card">
                 <h3>Overall Performance</h3>
-                <div class="stat-value">{{ success_rate if success_rate is defined else '75' }}%</div>
+                <div class="stat-value">{{ success_rate }}%</div>
                 <p>Average Success Rate</p>
             </div>
             
             <div class="stats-card">
                 <h3>Total Games</h3>
-                <div class="stat-value">{{ total_games if total_games is defined else '1,247' }}</div>
+                <div class="stat-value">{{ total_games }}</div>
                 <p>Games Completed</p>
             </div>
             
             <div class="stats-card">
                 <h3>Average Time</h3>
-                <div class="stat-value">{{ avg_duration if avg_duration is defined else '3.2' }}</div>
+                <div class="stat-value">{{ avg_duration }}</div>
                 <p>Minutes per Game</p>
             </div>
         </div>
@@ -50,6 +50,29 @@
 </div>
 
 <style>
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.stats-card {
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    color: var(--accent-blue);
+}
+
 .stats-section {
     margin: 3rem 0;
 }

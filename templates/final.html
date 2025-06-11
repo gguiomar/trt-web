@@ -17,16 +17,21 @@
     </div>
 
     <div class="game-container">
-        <h2>Wich cue was biased towards RED?</h2>
-        <form method="post" id="quadrant-form">
+        <h2>Which cue was biased towards RED?</h2>
+        <div id="quadrant-form">
             <div id="cues" class="queues-{{ n_quadrants }}">
                 {% for q in range(n_quadrants) %}
-                    <button type="submit" name="biased_quadrant" value="{{ q }}" class="cue-button">
+                    <button type="button" data-quadrant="{{ q }}" class="cue-button final-choice-btn">
                         Cue {{ q + 1 }}
                     </button>
                 {% endfor %}
             </div>
-        </form>
+        </div>
+        
+        <!-- Loading indicator -->
+        <div id="loading" style="display: none; text-align: center; margin-top: 1rem;">
+            <p>Processing your choice...</p>
+        </div>
     </div>
 </div>
 
@@ -84,16 +89,85 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 </style>
+
+<!-- Hidden data for JavaScript -->
+<script type="application/json" id="page-data">
+{
+    "gamesCompleted": {{ user_progress.games_completed if user_progress else 0 }}
+}
+</script>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Progress bar is now handled entirely by server-side rendering - no JavaScript needed
+    // Progress bar setup
     document.addEventListener('DOMContentLoaded', function() {
+        const pageData = JSON.parse(document.getElementById('page-data').textContent);
         const progressFill = document.getElementById('progress-fill');
-        const gamesCompleted = {{ user_progress.games_completed if user_progress else 0 }};
+        const gamesCompleted = pageData.gamesCompleted;
         const progressPercentage = (gamesCompleted / 10) * 100;
         progressFill.style.width = progressPercentage + '%';
+        
+        // Add event listeners to final choice buttons
+        const finalChoiceButtons = document.querySelectorAll('.final-choice-btn');
+        finalChoiceButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const quadrant = parseInt(this.getAttribute('data-quadrant'));
+                submitChoice(quadrant);
+            });
+        });
     });
+
+    // Submit choice function using AJAX to avoid mobile security warning
+    function submitChoice(quadrant) {
+        // Disable all buttons to prevent double submission
+        const buttons = document.querySelectorAll('.cue-button');
+        buttons.forEach((btn, index) => {
+            btn.disabled = true;
+            // Highlight the selected button
+            if (index === quadrant) {
+                btn.style.backgroundColor = '#4080ff';
+                btn.style.color = 'white';
+            }
+        });
+        
+        // Hide loading indicator
+        document.getElementById('loading').style.display = 'none';
+        
+        // Submit via AJAX
+        fetch('/api/submit_final_choice', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                biased_quadrant: quadrant
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Show selection for 1 second, then redirect to result page
+                setTimeout(function() {
+                    window.location.href = '/result?chosen=' + quadrant + 
+                                         '&correct=' + data.correct + 
+                                         '&score=' + data.score + 
+                                         '&biased=' + data.biased_quadrant;
+                }, 1000);
+            } else {
+                alert('Error: ' + data.message);
+                // Re-enable buttons on error
+                buttons.forEach(btn => btn.disabled = false);
+                document.getElementById('loading').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            // Re-enable buttons on error
+            buttons.forEach(btn => btn.disabled = false);
+            document.getElementById('loading').style.display = 'none';
+        });
+    }
 </script>
 {% endblock %}

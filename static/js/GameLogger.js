@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+// GameLogger component for VST application
+// This version works with React loaded from CDN
+
+const { useState, useEffect } = React;
 
 const GameLogger = () => {
   const [logs, setLogs] = useState([]);
@@ -12,8 +14,6 @@ const GameLogger = () => {
         round: event.detail.round,
         quadrant: event.detail.quadrant,
         choice: event.detail.choice,
-        color: event.detail.color
-      };
 
       setLogs(prevLogs => [...prevLogs, newLog]);
       

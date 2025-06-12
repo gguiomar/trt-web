@@ -85,6 +85,7 @@ class VSTtask:
                 return False
             red_ratio = color_counts[q]['RED'] / total
             if q == self.biased_quadrant:
+                
                 if red_ratio < 0.8:
                     return False
             elif not (0.35 <= red_ratio <= 0.65):

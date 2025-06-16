@@ -1,0 +1,4 @@
+
+create a new version of the game in the play.html rounds etc
+
+based of the vst task 

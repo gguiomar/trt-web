@@ -98,11 +98,11 @@ class VSTtask:
     def get_task_description(self) -> str:
         return (
             f"You will play a game with {self.n_rounds} rounds.<br>"
-            "In each round you'll see both active and inactive queues:<br>"
-            "One quadrant has 90% one color / 10% the other<br>"
-            "Other quadrants have a 50/50 color distribution<br>"
-            "2 to {self.max_cues_per_round} queues will be active per round<br>"
-            "Inactive queues appear greyed out and cannot be selected.<br><br>"
+            "In each round you'll see both active and inactive buttons:<br>"
+            "One button has 90% one color / 10% the other<br>"
+            "Other buttons have a 50/50 color distribution<br>"
+            "2 to {self.max_cues_per_round} cues will be active per round<br>"
+            "Inactive buttons appear greyed out and cannot be selected.<br><br>"
             f"After {self.n_rounds} rounds, identify the biased quadrant.<br>"
             "Correct: +100 points, Wrong: -100 points."
         )

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="final-page-container">
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--nav-height)); text-align: center; padding-top: calc(var(--nav-height) + 2rem);" class="final-page-container">
     <!-- Progress Bar -->
     <div class="progress-container">
         <div class="progress-label">Game Progress</div>
@@ -17,12 +17,12 @@
     </div>
 
     <div class="game-container">
-        <h2>Which cue was biased towards RED?</h2>
+        <h4>Where was the RED bias?</h4>
         <div id="quadrant-form">
             <div id="cues" class="queues-{{ n_quadrants }}">
                 {% for q in range(n_quadrants) %}
                     <button type="button" data-quadrant="{{ q }}" class="cue-button final-choice-btn">
-                        Cue {{ q + 1 }}
+                        {% if q == 0 %}A{% elif q == 1 %}B{% elif q == 2 %}C{% elif q == 3 %}D{% endif %}
                     </button>
                 {% endfor %}
             </div>
@@ -36,19 +36,10 @@
 </div>
 
 <style>
-.final-page-container {
-    min-height: calc(100vh - var(--nav-height));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: calc(var(--nav-height) - -2rem) 1rem 1rem 1rem;
-}
-
 .progress-container {
     width: 100%;
     max-width: 600px;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     text-align: center;
 }
 
@@ -65,7 +56,7 @@
     background-color: var(--border-light);
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem;
 }
 
 .progress-fill {
@@ -80,13 +71,22 @@
     color: var(--text-secondary);
 }
 
-.final-page-container .game-container {
-    margin: 0;
-    background-color: var(--card-background);
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
-    padding: 2.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+.game-container {
+    margin-top: 0.5rem;
+}
+
+.game-container h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+/* Mobile adjustments for final page */
+@media (max-width: 768px) {
+    .final-page-container {
+        padding-top: calc(var(--nav-height) + -0.5rem) !important;
+        justify-content: flex-start !important;
+        padding-bottom: 1rem !important;
+    }
 }
 </style>
 

@@ -1,4 +1,12 @@
 
 create a new version of the game in the play.html rounds etc
 
-based of the vst task 
+based of the current vst task environment create the following games
+
+easy mode - the same as the current vst task but without occlusions 
+
+hard mode - the same as the current vst task but with occlusions but without the validate rounds process so the task is closer to a weather prediction task 
+
+in the play page offer the option to play either easy or hard mode with one button for each
+
+in the result page play again button offer the option to play easy or hard 

@@ -3,10 +3,6 @@ from .config import debug_log
 
 class VSTtask:
     def __init__(self, n_quadrants: int = 4, n_queues: int = 1):
-        if not 2 <= n_quadrants <= 4:
-            raise ValueError("Number of quadrants must be between 2 and 4")
-        if n_queues < 1:
-            raise ValueError("Number of queues per quadrant must be at least 1")
             
         # Randomly determine number of rounds (5-15)
         self.n_rounds = random.randint(2, 10)
@@ -94,15 +90,81 @@ class VSTtask:
     
     def get_round_data(self, round_num: int):
         return self.rounds[round_num]
+
+
+class VSTtaskEasy(VSTtask):
+    """Easy mode: No occlusions (all buttons always active) but keeps validation"""
     
-    def get_task_description(self) -> str:
-        return (
-            f"You will play a game with {self.n_rounds} rounds.<br>"
-            "In each round you'll see both active and inactive buttons:<br>"
-            "One button has 90% one color / 10% the other<br>"
-            "Other buttons have a 50/50 color distribution<br>"
-            "2 to {self.max_cues_per_round} cues will be active per round<br>"
-            "Inactive buttons appear greyed out and cannot be selected.<br><br>"
-            f"After {self.n_rounds} rounds, identify the biased quadrant.<br>"
-            "Correct: +100 points, Wrong: -100 points."
-        )
+    def __init__(self, n_quadrants: int = 4, n_queues: int = 1):
+        super().__init__(n_quadrants, n_queues)
+        self.n_rounds = random.randint(5, 15)
+        debug_log(f"Created VSTtaskEasy with biased quadrant: {self.biased_quadrant} and {self.n_rounds} rounds")
+    
+    def _generate_rounds(self):
+        max_attempts = 100  # Prevent infinite loops
+        attempt = 0
+        
+        while attempt < max_attempts:
+            rounds = []
+            for _ in range(self.n_rounds):
+                # Create all possible cues - ALL ACTIVE in easy mode
+                all_cues = []
+                for q in self.quadrants:
+                    for queue in self.queue_map[q]:
+                        all_cues.append({
+                            'name': queue,
+                            'color': self._get_color(q),
+                            'quadrant': q,
+                            'active': True  # Always active in easy mode
+                        })
+                
+                rounds.append({'cues': all_cues})
+            
+            # Validate the rounds (keeps validation for solvability)
+            if self._validate_rounds([r['cues'] for r in rounds]):
+                debug_log(f"Generated {len(rounds)} easy mode rounds successfully after {attempt + 1} attempts")
+                return rounds
+            
+            attempt += 1
+        
+        # If we can't generate valid rounds after max_attempts, return what we have
+        debug_log(f"Warning: Could not generate valid easy mode rounds after {max_attempts} attempts, using last attempt")
+        return rounds
+    
+class VSTtaskHard(VSTtask):
+    """Hard mode: Has occlusions but NO validation (weather prediction style)"""
+    
+    def __init__(self, n_quadrants: int = 4, n_queues: int = 1):
+        super().__init__(n_quadrants, n_queues)
+        self.n_rounds = random.randint(1, 15)
+        debug_log(f"Created VSTtaskHard with biased quadrant: {self.biased_quadrant} and {self.n_rounds} rounds")
+    
+    def _generate_rounds(self):
+        # No validation loop - just generate rounds directly
+        rounds = []
+        for _ in range(self.n_rounds):
+            # Determine number of active cues for this round (2 to max)
+            n_active_cues = random.randint(1, self.max_cues_per_round)
+            
+            # Create all possible cues first
+            all_cues = []
+            for q in self.quadrants:
+                for queue in self.queue_map[q]:
+                    all_cues.append({
+                        'name': queue,
+                        'color': self._get_color(q),
+                        'quadrant': q,
+                        'active': False  # Default to inactive
+                    })
+            
+            # Randomly select cues to be active
+            active_indices = random.sample(range(len(all_cues)), n_active_cues)
+            for idx in active_indices:
+                all_cues[idx]['active'] = True
+            
+            rounds.append({'cues': all_cues})
+        
+        debug_log(f"Generated {len(rounds)} hard mode rounds (no validation)")
+        return rounds
+    
+    

@@ -23,7 +23,6 @@ class InMemoryGameManager:
                 "n_rounds": task.n_rounds,
                 "n_quadrants": task.n_quadrants,
                 "current_round": 0,
-                "task_description": task.get_task_description()
             },
             "rounds_data": task.rounds,
             "user_choices": [],

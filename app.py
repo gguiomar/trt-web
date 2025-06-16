@@ -7,7 +7,7 @@ import os
 from utils.config import SESSION_DIR, debug_log, LOGS_DIR
 from utils.GameLogger import GameLogger
 from utils.UserManager import UserManager
-from utils.VSTtask import VSTtask
+from utils.VSTtask import VSTtask, VSTtaskEasy, VSTtaskHard
 from utils.StatsCalculator import StatsCalculator
 from datetime import datetime, timezone
 
@@ -311,6 +311,142 @@ def start():
         
     except Exception as e:
         debug_log(f"Error in start route: {str(e)}\n{traceback.format_exc()}")
+        session.clear()
+        return redirect(url_for('index'))
+
+@app.route('/start/easy')
+def start_easy():
+    try:
+        debug_log("Starting new EASY game")
+        
+        # Clear ALL existing game state
+        session.pop('game_id', None)
+        session.pop('log_filepath', None)
+        session.pop('current_game_number', None)
+        session.pop('game', None)
+        
+        # Get user info from session
+        user_id = session.get('user_id')
+        if not user_id:
+            user_info = user_manager.get_or_create_user()
+            user_id = user_info['user_id']
+            session['user_id'] = user_id
+        
+        # Get user's current game progress
+        progress = user_manager.get_user_game_progress(user_id)
+        current_game_number = progress['games_completed'] + 1
+        session['user_progress'] = progress
+        
+        # Create new game log file
+        game_id, log_filepath = game_logger.create_game_log(user_id, current_game_number)
+        
+        # Initialize EASY game (no occlusions, with validation)
+        task = VSTtaskEasy(n_quadrants=4, n_queues=1) 
+        
+        # Validate round count
+        if len(task.rounds) != task.n_rounds:
+            debug_log(f"Warning: Round count mismatch! Expected {task.n_rounds}, got {len(task.rounds)}")
+            task.n_rounds = len(task.rounds)
+        
+        # Store simplified game data (no game_rounds in logs)
+        game_data = {
+            'game_id': game_id,
+            'user_id': user_id,
+            'game_mode': 'easy',
+            'start_time': datetime.now(timezone.utc).isoformat(),
+            'biased_cue': task.biased_quadrant,
+            'n_rounds': task.n_rounds,
+            'n_quadrants': task.n_quadrants,
+            'rounds': [],  # Simple logging format
+            'final_choice': None,
+            'completion_time': None,
+            'success': None
+        }
+        
+        # Save initial game data to JSON file
+        game_logger.save_game_data(log_filepath, game_data)
+        
+        # Store game rounds in session for gameplay (not in logs)
+        session['game_id'] = game_id
+        session['log_filepath'] = log_filepath
+        session['current_game_number'] = current_game_number
+        session['game_rounds'] = task.rounds  # Store in session for gameplay
+        session.modified = True
+        
+        debug_log(f"Started EASY game: ID={game_id}, rounds={task.n_rounds}, biased_quadrant={task.biased_quadrant}")
+        
+        return redirect(url_for('round_page', round_number=0))
+        
+    except Exception as e:
+        debug_log(f"Error in start_easy route: {str(e)}\n{traceback.format_exc()}")
+        session.clear()
+        return redirect(url_for('index'))
+
+@app.route('/start/hard')
+def start_hard():
+    try:
+        debug_log("Starting new HARD game")
+        
+        # Clear ALL existing game state
+        session.pop('game_id', None)
+        session.pop('log_filepath', None)
+        session.pop('current_game_number', None)
+        session.pop('game', None)
+        
+        # Get user info from session
+        user_id = session.get('user_id')
+        if not user_id:
+            user_info = user_manager.get_or_create_user()
+            user_id = user_info['user_id']
+            session['user_id'] = user_id
+        
+        # Get user's current game progress
+        progress = user_manager.get_user_game_progress(user_id)
+        current_game_number = progress['games_completed'] + 1
+        session['user_progress'] = progress
+        
+        # Create new game log file
+        game_id, log_filepath = game_logger.create_game_log(user_id, current_game_number)
+        
+        # Initialize HARD game (with occlusions, no validation)
+        task = VSTtaskHard(n_quadrants=4, n_queues=1) 
+        
+        # Validate round count
+        if len(task.rounds) != task.n_rounds:
+            debug_log(f"Warning: Round count mismatch! Expected {task.n_rounds}, got {len(task.rounds)}")
+            task.n_rounds = len(task.rounds)
+        
+        # Store simplified game data (no game_rounds in logs)
+        game_data = {
+            'game_id': game_id,
+            'user_id': user_id,
+            'game_mode': 'hard',
+            'start_time': datetime.now(timezone.utc).isoformat(),
+            'biased_cue': task.biased_quadrant,
+            'n_rounds': task.n_rounds,
+            'n_quadrants': task.n_quadrants,
+            'rounds': [],  # Simple logging format
+            'final_choice': None,
+            'completion_time': None,
+            'success': None
+        }
+        
+        # Save initial game data to JSON file
+        game_logger.save_game_data(log_filepath, game_data)
+        
+        # Store game rounds in session for gameplay (not in logs)
+        session['game_id'] = game_id
+        session['log_filepath'] = log_filepath
+        session['current_game_number'] = current_game_number
+        session['game_rounds'] = task.rounds  # Store in session for gameplay
+        session.modified = True
+        
+        debug_log(f"Started HARD game: ID={game_id}, rounds={task.n_rounds}, biased_quadrant={task.biased_quadrant}")
+        
+        return redirect(url_for('round_page', round_number=0))
+        
+    except Exception as e:
+        debug_log(f"Error in start_hard route: {str(e)}\n{traceback.format_exc()}")
         session.clear()
         return redirect(url_for('index'))
 

@@ -147,13 +147,21 @@
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // Show selection for 1 second, then redirect to result page
-                setTimeout(function() {
-                    window.location.href = '/result?chosen=' + quadrant + 
-                                         '&correct=' + data.correct + 
-                                         '&score=' + data.score + 
-                                         '&biased=' + data.biased_quadrant;
-                }, 1000);
+                // Check if we need to redirect to name selection
+                if (data.redirect_to) {
+                    // Redirect to name selection page
+                    setTimeout(function() {
+                        window.location.href = data.redirect_to;
+                    }, 1000);
+                } else {
+                    // Show selection for 1 second, then redirect to result page
+                    setTimeout(function() {
+                        window.location.href = '/result?chosen=' + quadrant + 
+                                             '&correct=' + data.correct + 
+                                             '&score=' + data.score + 
+                                             '&biased=' + data.biased_quadrant;
+                    }, 1000);
+                }
             } else {
                 alert('Error: ' + data.message);
                 // Re-enable buttons on error

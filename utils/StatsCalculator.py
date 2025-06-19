@@ -1,5 +1,6 @@
 import os
 import json
+import sqlite3
 from datetime import datetime
 from collections import defaultdict
 
@@ -147,3 +148,130 @@ class StatsCalculator:
                 return json.load(f)
         except FileNotFoundError:
             return None
+            
+    @classmethod
+    def get_combined_leaderboard(cls):
+        """Get combined leaderboard with both human players and LLMs"""
+        # Get human players from database
+        human_players = []
+        
+        try:
+            from utils.config import BASE_DIR
+            import os
+            
+            db_path = os.path.join(BASE_DIR, 'logs', 'users.db')
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Create rankings table if it doesn't exist (for safety)
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS user_rankings (
+                    user_id TEXT PRIMARY KEY,
+                    rank_score REAL DEFAULT 0,
+                    games_played INTEGER DEFAULT 0,
+                    wins INTEGER DEFAULT 0,
+                    losses INTEGER DEFAULT 0,
+                    streak INTEGER DEFAULT 0,
+                    highest_streak INTEGER DEFAULT 0,
+                    rank_tier TEXT DEFAULT 'Novice',
+                    last_updated TEXT,
+                    FOREIGN KEY (user_id) REFERENCES users (user_id)
+                )
+            ''')
+            
+            # Get top human players with at least 10 hard games
+            cursor.execute('''
+                SELECT r.user_id, COALESCE(u.display_name, ''), r.rank_score, r.rank_tier, 
+                       r.games_played, r.wins, r.losses, r.streak
+                FROM user_rankings r
+                JOIN users u ON r.user_id = u.user_id
+                WHERE u.hard_games_completed >= 10
+                ORDER BY r.rank_score DESC
+                LIMIT 20
+            ''')
+            
+            for row in cursor.fetchall():
+                user_id, display_name, rank_score, rank_tier, games_played, wins, losses, streak = row
+                
+                # Use display name if available, otherwise use anonymized ID
+                name = display_name if display_name else f"Player_{user_id[-6:]}"
+                
+                human_players.append({
+                    'user_id': user_id,
+                    'name': name,
+                    'score': rank_score,
+                    'tier': rank_tier,
+                    'games_played': games_played,
+                    'wins': wins,
+                    'losses': losses,
+                    'win_rate': (wins / games_played) * 100 if games_played > 0 else 0,
+                    'streak': streak,
+                    'type': 'human'
+                })
+            
+            conn.close()
+        except Exception as e:
+            print(f"Error getting human players: {str(e)}")
+        
+        # Get LLM data from the existing leaderboard
+        llm_players = []
+        
+        # Data from the original LLM leaderboard
+        llm_data = [
+            { 'rank': 1, 'model': 'Qwen_78_Instruct', 'score': 0.35 },
+            { 'rank': 2, 'model': 'Centaur_88', 'score': 0.33 },
+            { 'rank': 3, 'model': 'gpt40_mini', 'score': 0.30 },
+            { 'rank': 4, 'model': 'gpt40', 'score': 0.26 },
+            { 'rank': 5, 'model': 'Qwen_3B_Instruct', 'score': 0.23 },
+            { 'rank': 6, 'model': 'Qwen_3B', 'score': 0.21 },
+            { 'rank': 7, 'model': 'Qwen_1B', 'score': 0.19 },
+            { 'rank': 8, 'model': 'Qwen_7B', 'score': 0.17 },
+            { 'rank': 9, 'model': 'Deepseek_R1_7B_Qwen', 'score': 0.15 },
+            { 'rank': 10, 'model': 'Deepseek_R1_1B_Owen', 'score': 0.11 },
+            { 'rank': 11, 'model': 'Owen_1B_Instruct', 'score': 0.09 },
+            { 'rank': 12, 'model': 'Deepseek_R1_8B_Llama', 'score': 0.05 }
+        ]
+        
+        # Convert LLM scores to be comparable with human scores
+        # Assuming human scores range from 0-2000 and LLM scores from 0-1
+        for llm in llm_data:
+            # Scale LLM scores to human range (0-1 → 0-2000)
+            scaled_score = llm['score'] * 2000
+            
+            # Determine tier based on scaled score
+            tier = 'Novice'
+            tier_thresholds = {
+                'Novice': 0,
+                'Apprentice': 100,
+                'Adept': 250,
+                'Expert': 500,
+                'Master': 1000,
+                'Grandmaster': 2000
+            }
+            
+            for t, threshold in tier_thresholds.items():
+                if scaled_score >= threshold:
+                    tier = t
+            
+            llm_players.append({
+                'user_id': f"llm_{llm['model'].lower()}",
+                'name': f"🤖 {llm['model']}",
+                'score': scaled_score,
+                'tier': tier,
+                'games_played': 100,  # Placeholder
+                'wins': int(llm['score'] * 100),  # Approximate
+                'losses': 100 - int(llm['score'] * 100),
+                'win_rate': llm['score'] * 100,
+                'streak': 0,  # Placeholder
+                'type': 'llm'
+            })
+        
+        # Combine and sort
+        combined = human_players + llm_players
+        combined.sort(key=lambda x: x['score'], reverse=True)
+        
+        # Add ranks
+        for i, player in enumerate(combined):
+            player['rank'] = i + 1
+        
+        return combined

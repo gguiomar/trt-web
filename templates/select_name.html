@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-section">
+    <h1>Choose Your Player Name</h1>
+    
+    <div class="name-selection-container">
+        <p>Congratulations! You've completed 10 hard games and qualified for the leaderboard.</p>
+        <p>Select one of these monkey-themed names to represent you:</p>
+        
+        <form method="POST" action="{{ url_for('save_player_name') }}">
+            <div class="name-options">
+                {% for name in name_options %}
+                <div class="name-option">
+                    <input type="radio" name="player_name" id="name_{{ loop.index }}" value="{{ name }}" {% if loop.index == 1 %}checked{% endif %}>
+                    <label for="name_{{ loop.index }}">{{ name }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="submit" class="button">Continue to Leaderboard</button>
+        </form>
+        
+        <div class="refresh-names">
+            <a href="{{ url_for('select_name') }}" class="refresh-link">Generate New Names</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.name-selection-container {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.name-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.name-option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--border-light);
+    transition: all 0.2s;
+}
+
+.name-option:hover {
+    border-color: var(--accent-blue);
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.name-option input[type="radio"] {
+    margin-right: 1rem;
+    transform: scale(1.2);
+}
+
+.name-option label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.refresh-names {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.refresh-link {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    font-size: 0.9rem;
+}
+
+.button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1.5rem;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+</style>
+{% endblock %}

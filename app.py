@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 from flask_session import Session
 import traceback
 import os
+import sqlite3
 
 # Import our custom modules
 from utils.config import SESSION_DIR, debug_log, LOGS_DIR
@@ -9,6 +10,7 @@ from utils.GameLogger import GameLogger
 from utils.UserManager import UserManager
 from utils.VSTtask import VSTtask, VSTtaskEasy, VSTtaskHard
 from utils.StatsCalculator import StatsCalculator
+from utils.NameGenerator import NameGenerator
 from datetime import datetime, timezone
 
 app = Flask(__name__)
@@ -164,12 +166,31 @@ def statistics():
     avg_duration_secs = int(stats['average_duration'] % 60)
     formatted_duration = f"{avg_duration_mins}:{avg_duration_secs:02d}"
     
+    # Get combined leaderboard data
+    combined_leaderboard = StatsCalculator.get_combined_leaderboard()
+    
+    # Get current user's ID and find their rank
+    current_user_id = session.get('user_id')
+    current_user_data = None
+    current_user_rank = None
+    
+    if current_user_id:
+        for player in combined_leaderboard:
+            if player['user_id'] == current_user_id:
+                current_user_data = player
+                current_user_rank = player['rank']
+                break
+    
     return render_template('statistics.html',
                          total_games=stats['total_games'],
                          success_rate=f"{stats['success_rate']:.1f}",
                          avg_duration=formatted_duration,
                          performance_dist=stats['performance_distribution'],
-                         learning_curve=stats['learning_curve'])
+                         learning_curve=stats['learning_curve'],
+                         leaderboard=combined_leaderboard,
+                         current_user_id=current_user_id,
+                         current_user=current_user_data,
+                         current_user_rank=current_user_rank)
 
 @app.route('/research-notes')
 def research_notes():
@@ -303,6 +324,7 @@ def start():
         session['log_filepath'] = log_filepath
         session['current_game_number'] = current_game_number
         session['game_rounds'] = task.rounds  # Store in session for gameplay
+        session['game_mode'] = 'normal'  # Set game mode in session
         session.modified = True
         
         debug_log(f"Started simple game: ID={game_id}, rounds={task.n_rounds}, biased_quadrant={task.biased_quadrant}")
@@ -371,6 +393,7 @@ def start_easy():
         session['log_filepath'] = log_filepath
         session['current_game_number'] = current_game_number
         session['game_rounds'] = task.rounds  # Store in session for gameplay
+        session['game_mode'] = 'easy'  # Set game mode in session
         session.modified = True
         
         debug_log(f"Started EASY game: ID={game_id}, rounds={task.n_rounds}, biased_quadrant={task.biased_quadrant}")
@@ -439,6 +462,7 @@ def start_hard():
         session['log_filepath'] = log_filepath
         session['current_game_number'] = current_game_number
         session['game_rounds'] = task.rounds  # Store in session for gameplay
+        session['game_mode'] = 'hard'  # Set game mode in session
         session.modified = True
         
         debug_log(f"Started HARD game: ID={game_id}, rounds={task.n_rounds}, biased_quadrant={task.biased_quadrant}")
@@ -541,7 +565,7 @@ def final():
         if not game_id or not log_filepath:
             debug_log("No game_id or log_filepath in session at final page")
             debug_log(f"Current session: {dict(session)}")
-            return redirect(url_for('introduction'))  # Go to introduction instead of index
+            return redirect(url_for('result'))  # Go to result page instead of introduction
         
         # Load game data from JSON file
         game_data = game_logger.load_game_data(log_filepath)
@@ -576,6 +600,23 @@ def final():
             if user_id:
                 user_manager.record_game_completion(user_id, game_id, score)
                 debug_log(f"Recorded game completion for user {user_id}: score {score}")
+                
+                # Check if user has completed 10 hard games and doesn't have a name yet
+                hard_games_completed = user_manager.get_hard_games_completed(user_id)
+                
+                if hard_games_completed >= 10 and game_data.get('game_mode') == 'hard':
+                    # Check if user already has a display name
+                    conn = sqlite3.connect(user_manager.db_path)
+                    cursor = conn.cursor()
+                    cursor.execute('SELECT COALESCE(display_name, "") FROM users WHERE user_id = ?', (user_id,))
+                    result = cursor.fetchone()
+                    conn.close()
+                    
+                    if not result or not result[0]:
+                        # User has completed 10 hard games but doesn't have a name yet
+                        # Redirect to name selection page
+                        debug_log(f"User {user_id} has completed 10 hard games, redirecting to name selection")
+                        return redirect(url_for('select_name'))
             
             debug_log(f"Game completed - Chosen: {chosen}, Correct: {correct}, Score: {score}")
             user_progress = session.get('user_progress', {'games_completed': 0, 'total_score': 0})
@@ -769,6 +810,30 @@ def submit_final_choice():
         if user_id:
             user_manager.record_game_completion(user_id, game_id, score)
             debug_log(f"Recorded game completion for user {user_id}: score {score}")
+            
+            # Check if user has completed 10 hard games and doesn't have a name yet
+            if game_data.get('game_mode') == 'hard':
+                hard_games_completed = user_manager.get_hard_games_completed(user_id)
+                
+                if hard_games_completed >= 10:
+                    # Check if user already has a display name
+                    conn = sqlite3.connect(user_manager.db_path)
+                    cursor = conn.cursor()
+                    cursor.execute('SELECT COALESCE(display_name, "") FROM users WHERE user_id = ?', (user_id,))
+                    result = cursor.fetchone()
+                    conn.close()
+                    
+                    if not result or not result[0]:
+                        # User has completed 10 hard games but doesn't have a name yet
+                        # Return a special response to trigger redirection to name selection
+                        return jsonify({
+                            'status': 'success',
+                            'chosen': chosen,
+                            'correct': correct,
+                            'score': score,
+                            'biased_quadrant': biased_quadrant,
+                            'redirect_to': url_for('select_name')
+                        })
         
         debug_log(f"Game completed via AJAX - Chosen: {chosen}, Correct: {correct}, Score: {score}")
         
@@ -797,6 +862,12 @@ def result():
         
         user_progress = session.get('user_progress', {'games_completed': 0, 'total_score': 0})
         
+        # Check if we should redirect to name selection
+        if session.get('redirect_to_name_selection'):
+            session.pop('redirect_to_name_selection', None)
+            debug_log(f"Redirecting to name selection from result page")
+            return redirect(url_for('select_name'))
+        
         return render_template('result.html', 
                              chosen=chosen, 
                              correct=correct, 
@@ -807,6 +878,38 @@ def result():
     except Exception as e:
         debug_log(f"Error in result route: {str(e)}\n{traceback.format_exc()}")
         return redirect(url_for('index'))
+
+
+@app.route('/select_name', methods=['GET'])
+def select_name():
+    """Display name selection page after 10 hard games"""
+    # Generate 3 random monkey-themed names
+    name_options = NameGenerator.generate_options(3)
+    return render_template('select_name.html', name_options=name_options)
+
+@app.route('/save_player_name', methods=['POST'])
+def save_player_name():
+    """Save the selected player name"""
+    player_name = request.form.get('player_name')
+    
+    # Store in session
+    session['player_name'] = player_name
+    
+    # Get user ID from session
+    user_id = session.get('user_id')
+    if not user_id:
+        user_info = user_manager.get_or_create_user()
+        user_id = user_info['user_id']
+        session['user_id'] = user_id
+    
+    # Update user's name
+    user_manager.update_player_name(user_id, player_name)
+    
+    # Set persistent cookie and redirect to statistics
+    token = user_manager.set_user_token(user_id)
+    response = redirect(url_for('statistics'))
+    response.set_cookie('vst_player_token', token, max_age=60*60*24*365)  # 1 year
+    return response
 
 
 if __name__ == '__main__':

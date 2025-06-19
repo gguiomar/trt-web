@@ -3,8 +3,8 @@ import json
 import hashlib
 import sqlite3
 from datetime import datetime, timezone
-from flask import request
-from utils.config import BASE_DIR
+from flask import request, session
+from utils.config import BASE_DIR, debug_log
 
 class UserManager:
     def __init__(self):
@@ -27,9 +27,16 @@ class UserManager:
                 games_completed INTEGER DEFAULT 0,
                 total_score INTEGER DEFAULT 0,
                 device_type TEXT,
-                browser TEXT
+                browser TEXT,
+                display_name TEXT DEFAULT NULL,
+                persistent_token TEXT DEFAULT NULL,
+                hard_games_completed INTEGER DEFAULT 0
             )
         ''')
+        
+        # We don't need to check for hard_games_completed column anymore
+        # since it's already included in the CREATE TABLE statement above
+        conn.commit()
         
         # Create user_games table
         cursor.execute('''
@@ -161,12 +168,13 @@ class UserManager:
             )
             returning_user = True
         else:
-            # Create new user
+            # Create new user with a default display name
+            default_display_name = f"Player_{user_id[-6:]}"
             cursor.execute('''
                 INSERT INTO users (user_id, ip_hash, user_agent_hash, first_visit, last_visit, 
-                                 games_completed, total_score, device_type, browser)
-                VALUES (?, ?, ?, ?, ?, 0, 0, ?, ?)
-            ''', (user_id, ip_hash, ua_hash, current_time, current_time, device_type, browser))
+                                 games_completed, total_score, device_type, browser, display_name)
+                VALUES (?, ?, ?, ?, ?, 0, 0, ?, ?, ?)
+            ''', (user_id, ip_hash, ua_hash, current_time, current_time, device_type, browser, default_display_name))
             returning_user = False
         
         conn.commit()
@@ -241,9 +249,56 @@ class UserManager:
                 WHERE user_id = ?
             ''', (score, user_id))
             
+            # Check if this was a hard game and update hard_games_completed if it was
+            game_mode = session.get('game_mode')
+            if game_mode == 'hard':
+                # Make sure the column exists before updating
+                try:
+                    cursor.execute('''
+                        UPDATE users 
+                        SET hard_games_completed = COALESCE(hard_games_completed, 0) + 1
+                        WHERE user_id = ?
+                    ''', (user_id,))
+                except sqlite3.OperationalError:
+                    # Column doesn't exist, add it and then update
+                    cursor.execute("ALTER TABLE users ADD COLUMN hard_games_completed INTEGER DEFAULT 0")
+                    cursor.execute('''
+                        UPDATE users 
+                        SET hard_games_completed = 1
+                        WHERE user_id = ?
+                    ''', (user_id,))
+            
             conn.commit()
         
         conn.close()
+        
+        # Update user ranking if they've completed at least 10 hard games
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('SELECT hard_games_completed FROM users WHERE user_id = ?', (user_id,))
+            result = cursor.fetchone()
+            hard_games = result[0] if result else 0
+        except sqlite3.OperationalError:
+            # Column doesn't exist
+            hard_games = 0
+        
+        conn.close()
+        
+        if hard_games >= 10:
+            # Load game data to get full details
+            from utils.GameLogger import GameLogger
+            game_logger = GameLogger()
+            
+            # Get log filepath from game_id
+            log_filepath = os.path.join(os.path.dirname(self.db_path), f"game_{game_id}.json")
+            if os.path.exists(log_filepath):
+                game_data = game_logger.load_game_data(log_filepath)
+                
+                # Update user ranking
+                from utils.RankingSystem import RankingSystem
+                RankingSystem.update_user_ranking(self.db_path, user_id, game_data)
     
     def get_user_stats(self, user_id):
         """Get comprehensive user statistics"""
@@ -275,7 +330,9 @@ class UserManager:
                     'games_completed': user_info[5],
                     'total_score': user_info[6],
                     'device_type': user_info[7],
-                    'browser': user_info[8]
+                    'browser': user_info[8],
+                    'display_name': user_info[9],
+                    'hard_games_completed': user_info[11] if len(user_info) > 11 else 0
                 },
                 'recent_games': [
                     {
@@ -287,3 +344,73 @@ class UserManager:
                 ]
             }
         return None
+        
+    def update_player_name(self, user_id, display_name):
+        """Update a user's display name"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute(
+            'UPDATE users SET display_name = ? WHERE user_id = ?',
+            (display_name, user_id)
+        )
+        
+        conn.commit()
+        conn.close()
+        
+    def get_user_by_token(self, token):
+        """Get user by persistent token"""
+        if not token:
+            return None
+            
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute('SELECT user_id, display_name FROM users WHERE persistent_token = ?', (token,))
+        result = cursor.fetchone()
+        
+        conn.close()
+        
+        if result:
+            return {
+                'user_id': result[0],
+                'display_name': result[1]
+            }
+        return None
+        
+    def set_user_token(self, user_id):
+        """Generate and set a persistent token for a user"""
+        import secrets
+        token = secrets.token_hex(16)
+        
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute(
+            'UPDATE users SET persistent_token = ? WHERE user_id = ?',
+            (token, user_id)
+        )
+        
+        conn.commit()
+        conn.close()
+        
+        return token
+        
+    def get_hard_games_completed(self, user_id):
+        """Get the number of hard games completed by a user"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('SELECT hard_games_completed FROM users WHERE user_id = ?', (user_id,))
+            result = cursor.fetchone()
+            
+            conn.close()
+            
+            return result[0] if result else 0
+        except sqlite3.OperationalError:
+            # Column doesn't exist
+            cursor.execute("ALTER TABLE users ADD COLUMN hard_games_completed INTEGER DEFAULT 0")
+            conn.commit()
+            conn.close()
+            return 0

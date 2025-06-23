@@ -601,21 +601,23 @@ def final():
                 user_manager.record_game_completion(user_id, game_id, score)
                 debug_log(f"Recorded game completion for user {user_id}: score {score}")
                 
-                # Check if user has completed 10 hard games and doesn't have a name yet
+            # Check if user has completed 10 hard games and still has default name
+            if game_data.get('game_mode') == 'hard':
                 hard_games_completed = user_manager.get_hard_games_completed(user_id)
                 
-                if hard_games_completed >= 10 and game_data.get('game_mode') == 'hard':
-                    # Check if user already has a display name
+                if hard_games_completed >= 10:
+                    # Check if user still has a default display name (starts with "Player_")
                     conn = sqlite3.connect(user_manager.db_path)
                     cursor = conn.cursor()
                     cursor.execute('SELECT COALESCE(display_name, "") FROM users WHERE user_id = ?', (user_id,))
                     result = cursor.fetchone()
                     conn.close()
                     
-                    if not result or not result[0]:
-                        # User has completed 10 hard games but doesn't have a name yet
+                    current_name = result[0] if result else ""
+                    if current_name.startswith("Player_"):
+                        # User has completed 10 hard games but still has default name
                         # Redirect to name selection page
-                        debug_log(f"User {user_id} has completed 10 hard games, redirecting to name selection")
+                        debug_log(f"User {user_id} has completed {hard_games_completed} hard games with default name '{current_name}', redirecting to name selection")
                         return redirect(url_for('select_name'))
             
             debug_log(f"Game completed - Chosen: {chosen}, Correct: {correct}, Score: {score}")
@@ -811,20 +813,21 @@ def submit_final_choice():
             user_manager.record_game_completion(user_id, game_id, score)
             debug_log(f"Recorded game completion for user {user_id}: score {score}")
             
-            # Check if user has completed 10 hard games and doesn't have a name yet
+            # Check if user has completed 10 hard games and still has default name
             if game_data.get('game_mode') == 'hard':
                 hard_games_completed = user_manager.get_hard_games_completed(user_id)
                 
                 if hard_games_completed >= 10:
-                    # Check if user already has a display name
+                    # Check if user still has a default display name (starts with "Player_")
                     conn = sqlite3.connect(user_manager.db_path)
                     cursor = conn.cursor()
                     cursor.execute('SELECT COALESCE(display_name, "") FROM users WHERE user_id = ?', (user_id,))
                     result = cursor.fetchone()
                     conn.close()
                     
-                    if not result or not result[0]:
-                        # User has completed 10 hard games but doesn't have a name yet
+                    current_name = result[0] if result else ""
+                    if current_name.startswith("Player_"):
+                        # User has completed 10 hard games but still has default name
                         # Return a special response to trigger redirection to name selection
                         return jsonify({
                             'status': 'success',

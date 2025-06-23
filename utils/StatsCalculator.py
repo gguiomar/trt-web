@@ -112,12 +112,30 @@ class StatsCalculator:
                  if game.get('final_result')]
         if not scores:
             return {'bins': [-100, -50, 0, 50, 100], 'counts': [0, 0, 0, 0]}
+        
         bins = [-100, -50, 0, 50, 100]
-        hist, _ = np.histogram(scores, bins=bins)
-        return {
-            'bins': bins,
-            'counts': hist.tolist()
-        }
+        
+        if HAS_NUMPY:
+            hist, _ = np.histogram(scores, bins=bins)
+            return {
+                'bins': bins,
+                'counts': hist.tolist()
+            }
+        else:
+            # Manual histogram calculation if numpy is not available
+            counts = [0] * (len(bins) - 1)
+            for score in scores:
+                for i in range(len(bins) - 1):
+                    if bins[i] <= score < bins[i + 1]:
+                        counts[i] += 1
+                        break
+                    elif score >= bins[-1]:  # Handle edge case for maximum value
+                        counts[-1] += 1
+                        break
+            return {
+                'bins': bins,
+                'counts': counts
+            }
 
     @staticmethod
     def _calculate_learning_curve(games_data):
@@ -179,13 +197,12 @@ class StatsCalculator:
                 )
             ''')
             
-            # Get top human players with at least 10 hard games
+            # Get top human players from rankings (they already have 10+ hard games to be in rankings)
             cursor.execute('''
                 SELECT r.user_id, COALESCE(u.display_name, ''), r.rank_score, r.rank_tier, 
                        r.games_played, r.wins, r.losses, r.streak
                 FROM user_rankings r
                 JOIN users u ON r.user_id = u.user_id
-                WHERE u.hard_games_completed >= 10
                 ORDER BY r.rank_score DESC
                 LIMIT 20
             ''')

@@ -1,8 +1,11 @@
 import random
+import sqlite3
+import os
 
 class NameGenerator:
     """
     Generates monkey-themed names for players who qualify for the leaderboard.
+    Names are always in the format: DescriptorMonkeyType (e.g., "AgileCapuchin")
     """
     
     # Monkey species/types
@@ -11,20 +14,18 @@ class NameGenerator:
         "Howler", "Spider", "Squirrel", "Rhesus", "Langur", "Colobus", "Vervet",
         "Mangabey", "Proboscis", "Tarsier", "Lemur", "Bonobo", "Chimp", "Gorilla",
         "Orangutan", "Siamang", "Gelada", "Drill", "Patas", "Guereza", "Douc",
-        "Snub-Nosed", "Woolly", "Uakari", "Saki", "Titi", "Muriqui", "Indri"
+        "SnubNosed", "Woolly", "Uakari", "Saki", "Titi", "Muriqui", "Indri"
     ]
     
-    # Adjectives that could describe monkeys or their behavior
-    ADJECTIVES = [
+    # Combined descriptors (adjectives + titles) for more variety
+    DESCRIPTORS = [
+        # Adjectives that could describe monkeys or their behavior
         "Agile", "Clever", "Swift", "Nimble", "Curious", "Playful", "Wise", "Tricky",
         "Mischievous", "Acrobatic", "Daring", "Brave", "Mighty", "Noble", "Cunning",
         "Vigilant", "Energetic", "Vibrant", "Jovial", "Spirited", "Tenacious", "Keen",
         "Astute", "Perceptive", "Observant", "Resourceful", "Inventive", "Crafty",
-        "Shrewd", "Witty", "Dexterous", "Adept", "Skilled", "Ageless", "Primal"
-    ]
-    
-    # Titles or roles that could be assigned to monkeys
-    TITLES = [
+        "Shrewd", "Witty", "Dexterous", "Adept", "Skilled", "Ageless", "Primal",
+        # Titles or roles that could be assigned to monkeys
         "King", "Queen", "Captain", "Chief", "Master", "Guardian", "Watcher", "Scout",
         "Explorer", "Voyager", "Ranger", "Hunter", "Gatherer", "Sage", "Elder",
         "Sentinel", "Protector", "Champion", "Warrior", "Defender", "Seeker", "Tracker",
@@ -33,24 +34,57 @@ class NameGenerator:
     ]
     
     @classmethod
-    def generate_name(cls):
-        """Generate a single monkey-themed name"""
-        name_type = random.choice([1, 2, 3])
+    def _get_existing_names(cls):
+        """Get all existing custom display names from the database"""
+        try:
+            from utils.config import BASE_DIR
+            db_path = os.path.join(BASE_DIR, 'logs', 'users.db')
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Get all custom display names (not default "Player_" names)
+            cursor.execute("""
+                SELECT display_name FROM users 
+                WHERE display_name IS NOT NULL 
+                AND display_name != '' 
+                AND NOT display_name LIKE 'Player_%'
+            """)
+            
+            existing_names = {row[0] for row in cursor.fetchall()}
+            conn.close()
+            
+            return existing_names
+        except Exception as e:
+            print(f"Error getting existing names: {e}")
+            return set()
+    
+    @classmethod
+    def generate_name(cls, existing_names=None):
+        """Generate a single monkey-themed name in format: DescriptorMonkeyType"""
+        if existing_names is None:
+            existing_names = set()
         
-        if name_type == 1:
-            # Format: Adjective + Monkey Type (e.g., "Clever Capuchin")
-            return f"{random.choice(cls.ADJECTIVES)} {random.choice(cls.MONKEY_TYPES)}"
-        elif name_type == 2:
-            # Format: Monkey Type + Title (e.g., "Gibbon Guardian")
-            return f"{random.choice(cls.MONKEY_TYPES)} {random.choice(cls.TITLES)}"
-        else:
-            # Format: Adjective + Title (e.g., "Nimble Navigator")
-            return f"{random.choice(cls.ADJECTIVES)} {random.choice(cls.TITLES)}"
+        # Generate name in format: DescriptorMonkeyType (no spaces)
+        descriptor = random.choice(cls.DESCRIPTORS)
+        monkey_type = random.choice(cls.MONKEY_TYPES)
+        return f"{descriptor}{monkey_type}"
     
     @classmethod
     def generate_options(cls, count=3):
-        """Generate multiple unique name options"""
+        """Generate multiple unique name options that aren't already taken"""
+        existing_names = cls._get_existing_names()
         names = set()
-        while len(names) < count:
-            names.add(cls.generate_name())
+        max_attempts = count * 50  # Safety limit to prevent infinite loops
+        attempts = 0
+        
+        while len(names) < count and attempts < max_attempts:
+            name = cls.generate_name(existing_names)
+            if name not in existing_names:
+                names.add(name)
+            attempts += 1
+        
+        if len(names) < count:
+            print(f"Warning: Could only generate {len(names)} unique names out of {count} requested")
+        
         return list(names)

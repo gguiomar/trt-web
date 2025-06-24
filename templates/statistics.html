@@ -15,7 +15,6 @@
                             <th>Rank</th>
                             <th>Player</th>
                             <th>Type</th>
-                            <th>Tier</th>
                             <th>Score</th>
                             <th>Win Rate</th>
                             <th>Games</th>
@@ -27,8 +26,7 @@
                             {% if player.type == 'llm' %}class="llm-player"{% endif %}>
                             <td>{{ player.rank }}</td>
                             <td>{{ player.name }}</td>
-                            <td>{{ "AI" if player.type == 'llm' else "Human" }}</td>
-                            <td><span class="tier-badge tier-{{ player.tier|lower }}">{{ player.tier }}</span></td>
+                            <td>{{ "LLM" if player.type == 'llm' else "Human" }}</td>
                             <td>{{ player.score|round|int }}</td>
                             <td>{{ player.win_rate|round|int }}%</td>
                             <td>{{ player.games_played }}</td>
@@ -48,7 +46,6 @@
                         <tr>
                             <th>Rank</th>
                             <th>Player</th>
-                            <th>Tier</th>
                             <th>Score</th>
                             <th>Win Rate</th>
                             <th>Games</th>
@@ -58,7 +55,6 @@
                         <tr class="current-user">
                             <td>{{ current_user_rank }}</td>
                             <td>{{ current_user.name }}</td>
-                            <td><span class="tier-badge tier-{{ current_user.tier|lower }}">{{ current_user.tier }}</span></td>
                             <td>{{ current_user.score|round|int }}</td>
                             <td>{{ current_user.win_rate|round|int }}%</td>
                             <td>{{ current_user.games_played }}</td>
@@ -264,7 +260,7 @@ function updateStatisticsIfNeeded() {
     // Check if we should update (cooldown of 1 minute)
     const lastUpdate = localStorage.getItem('stats_last_update');
     const now = new Date().getTime();
-    const cooldownPeriod = 1 * 60 * 1000; // 1 minute in milliseconds
+    const cooldownPeriod = 10 * 1000; // 10 seconds cooldown
     
     if (lastUpdate && (now - parseInt(lastUpdate)) < cooldownPeriod) {
         console.log('Statistics update skipped - cooldown period active');

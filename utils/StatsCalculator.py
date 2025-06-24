@@ -304,9 +304,9 @@ class StatsCalculator:
                 'type': 'llm'
             })
         
-        # Combine and sort
+        # Combine and sort by win rate
         combined = human_players + llm_players
-        combined.sort(key=lambda x: x['score'], reverse=True)
+        combined.sort(key=lambda x: x['win_rate'], reverse=True)
         
         # Add ranks
         for i, player in enumerate(combined):

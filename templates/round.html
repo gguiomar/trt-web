@@ -32,7 +32,7 @@
                 </button>
             {% endfor %}
         </div>
-        <p>Click on an active button (inactive cues are grayed out)</p>
+        <p>Click on an active button (inactive cues have no letters)</p>
         
         <div id="message" style="margin-top: 1rem; min-height: 2rem;"></div>
     </div>
@@ -84,8 +84,6 @@
 }
 
 .inactive {
-    background-color: #cccccc !important;
-    color: transparent !important;
     cursor: not-allowed !important;
     opacity: 1;
 }

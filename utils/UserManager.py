@@ -287,18 +287,20 @@ class UserManager:
         conn.close()
         
         if hard_games >= 10:
-            # Load game data to get full details
-            from utils.GameLogger import GameLogger
-            game_logger = GameLogger()
+            # Check if user has a custom name (qualified for leaderboard)
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute('SELECT display_name FROM users WHERE user_id = ?', (user_id,))
+            result = cursor.fetchone()
+            display_name = result[0] if result else ""
+            conn.close()
             
-            # Get log filepath from game_id
-            log_filepath = os.path.join(os.path.dirname(self.db_path), f"game_{game_id}.json")
-            if os.path.exists(log_filepath):
-                game_data = game_logger.load_game_data(log_filepath)
-                
-                # Update user ranking
+            # Only update ranking if user has custom name (not default Player_ name)
+            if display_name and not display_name.startswith("Player_"):
+                # Use complete history calculation instead of incremental update
                 from utils.RankingSystem import RankingSystem
-                RankingSystem.update_user_ranking(self.db_path, user_id, game_data)
+                logs_dir = os.path.dirname(self.db_path)
+                RankingSystem.calculate_user_ranking_from_history(self.db_path, user_id, logs_dir)
     
     def get_user_stats(self, user_id):
         """Get comprehensive user statistics"""

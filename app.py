@@ -703,28 +703,69 @@ def check_round_status():
 
 @app.route('/api/update_statistics', methods=['POST'])
 def update_statistics():
-    """Manually trigger statistics update"""
+    """Manually trigger statistics update and ranking updates for qualified players"""
     try:
-        debug_log("Manually updating statistics")
-        import subprocess
+        debug_log("Manually updating statistics and rankings")
         
-        # Use conda environment to run statistics update
-        conda_cmd = [
-            'bash', '-c',
-            'source /home/vst/miniconda3/etc/profile.d/conda.sh && '
-            'conda activate vst && '
-            'python -c "from utils.StatsCalculator import StatsCalculator; StatsCalculator.update_statistics(\\"logs\\")"'
-        ]
+        # Get force parameter from request
+        force_update = request.json.get('force', False) if request.is_json else False
         
-        result = subprocess.run(conda_cmd, capture_output=True, text=True, cwd='/var/www/vst')
-        
-        if result.returncode == 0:
-            return jsonify({'status': 'success', 'message': 'Statistics updated successfully'})
-        else:
-            debug_log(f"Statistics update failed: {result.stderr}")
-            return jsonify({'status': 'error', 'message': f'Update failed: {result.stderr}'}), 500
+        # Try direct import first (faster)
+        try:
+            from utils.StatsCalculator import StatsCalculator
+            from utils.RankingSystem import RankingSystem
+            from utils.config import BASE_DIR
+            import os
+            
+            # Update statistics first
+            stats_success = StatsCalculator.update_statistics('logs', force_update=force_update)
+            
+            # Update rankings for all qualified players
+            db_path = os.path.join(BASE_DIR, 'logs', 'users.db')
+            logs_dir = os.path.join(BASE_DIR, 'logs')
+            ranking_results = RankingSystem.update_all_qualified_players(db_path, logs_dir)
+            
+            debug_log(f"Ranking update results: {ranking_results}")
+            
+            if stats_success:
+                return jsonify({
+                    'status': 'success', 
+                    'message': 'Statistics and rankings updated successfully',
+                    'ranking_updates': ranking_results
+                })
+            else:
+                return jsonify({
+                    'status': 'error', 
+                    'message': 'Statistics update failed',
+                    'ranking_updates': ranking_results
+                }), 500
+                
+        except Exception as direct_error:
+            debug_log(f"Direct update failed, trying subprocess: {str(direct_error)}")
+            
+            # Fallback to subprocess method
+            import subprocess
+            
+            force_flag = ', force_update=True' if force_update else ''
+            
+            # Use conda environment to run statistics update
+            conda_cmd = [
+                'bash', '-c',
+                'source /home/vst/miniconda3/etc/profile.d/conda.sh && '
+                'conda activate vst && '
+                f'python -c "from utils.StatsCalculator import StatsCalculator; from utils.RankingSystem import RankingSystem; import os; StatsCalculator.update_statistics(\\"logs\\"{force_flag}); RankingSystem.update_all_qualified_players(\\"logs/users.db\\", \\"logs\\")"'
+            ]
+            
+            result = subprocess.run(conda_cmd, capture_output=True, text=True, cwd='/var/www/vst')
+            
+            if result.returncode == 0:
+                return jsonify({'status': 'success', 'message': 'Statistics and rankings updated successfully'})
+            else:
+                debug_log(f"Statistics and ranking update failed: {result.stderr}")
+                return jsonify({'status': 'error', 'message': f'Update failed: {result.stderr}'}), 500
+                
     except Exception as e:
-        debug_log(f"Error updating statistics: {str(e)}")
+        debug_log(f"Error updating statistics and rankings: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/api/game_analysis')

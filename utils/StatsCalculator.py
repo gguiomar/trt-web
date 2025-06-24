@@ -14,9 +14,26 @@ class StatsCalculator:
     STATS_FILE = 'static/stats.json'
 
     @classmethod
-    def update_statistics(cls, logs_dir):
+    def update_statistics(cls, logs_dir, force_update=False):
         """Calculate and update statistics from all game logs"""
         try:
+            # Check if we should update (cooldown of 5 minutes unless forced)
+            if not force_update and os.path.exists(cls.STATS_FILE):
+                try:
+                    with open(cls.STATS_FILE, 'r') as f:
+                        existing_stats = json.load(f)
+                        last_updated = existing_stats.get('last_updated')
+                        if last_updated:
+                            from datetime import timedelta
+                            last_update_time = datetime.fromisoformat(last_updated.replace('Z', '+00:00'))
+                            now = datetime.utcnow()
+                            if (now - last_update_time) < timedelta(minutes=1):
+                                print("Statistics update skipped - cooldown period active")
+                                return True
+                except Exception as e:
+                    print(f"Error checking last update time: {str(e)}")
+                    # Continue with update if we can't check the timestamp
+            
             # Collect all game data from multiple directories
             games_data = []
             
@@ -70,9 +87,13 @@ class StatsCalculator:
             os.makedirs(os.path.dirname(cls.STATS_FILE), exist_ok=True)
             with open(cls.STATS_FILE, 'w') as f:
                 json.dump(stats, f, indent=2)
+            
+            print(f"Statistics updated successfully: {stats['total_games']} games processed")
+            return True
 
         except Exception as e:
             print(f"Error updating statistics: {str(e)}")
+            return False
 
     @staticmethod
     def _calculate_success_rate(games_data):

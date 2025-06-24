@@ -2,37 +2,10 @@
 
 {% block content %}
 <div class="content-section">
-    <h1>G1Bbon Benchmark</h1>
-    
-    <!-- Human Performance Section -->
-    <div class="stats-section">
-        <h2>Human Performance</h2>
-        
-        <div class="stats-grid">
-            <div class="stats-card">
-                <h3>Overall Performance</h3>
-                <div class="stat-value">{{ success_rate }}%</div>
-                <p>Average Success Rate</p>
-            </div>
-            
-            <div class="stats-card">
-                <h3>Total Games</h3>
-                <div class="stat-value">{{ total_games }}</div>
-                <p>Games Completed</p>
-            </div>
-            
-            <div class="stats-card">
-                <h3>Average Time</h3>
-                <div class="stat-value">{{ avg_duration }}</div>
-                <p>Minutes per Game</p>
-            </div>
-        </div>
-    </div>
+    <h1>G1Bbon Leaderboard</h1>
     
     <!-- Leaderboard -->
     <div class="stats-section">
-        <h2>Combined Human & AI Leaderboard</h2>
-        
         <!-- Leaderboard Table -->
         <div class="leaderboard-container">
             <div class="leaderboard-table-container">
@@ -286,140 +259,89 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('leaderboardChart').getContext('2d');
+// Function to update statistics with cooldown
+function updateStatisticsIfNeeded() {
+    // Check if we should update (cooldown of 1 minute)
+    const lastUpdate = localStorage.getItem('stats_last_update');
+    const now = new Date().getTime();
+    const cooldownPeriod = 1 * 60 * 1000; // 1 minute in milliseconds
     
-    // Data from the original table
-    const modelData = [
-        { rank: 1, model: 'Qwen_78_Instruct', scoreRange: '0.34 - 0.36', score: 0.35 },
-        { rank: 2, model: 'Centaur_88', scoreRange: '0.32 - 0.34', score: 0.33 },
-        { rank: 3, model: 'gpt40_mini', scoreRange: '0.29 - 0.31', score: 0.30 },
-        { rank: 4, model: 'gpt40', scoreRange: '0.25 - 0.27', score: 0.26 },
-        { rank: 5, model: 'Qwen_3B_Instruct', scoreRange: '0.22 - 0.24', score: 0.23 },
-        { rank: 6, model: 'Qwen_3B', scoreRange: '0.20 - 0.22', score: 0.21 },
-        { rank: 7, model: 'Qwen_1B', scoreRange: '0.18 - 0.20', score: 0.19 },
-        { rank: 8, model: 'Qwen_7B', scoreRange: '0.16 - 0.18', score: 0.17 },
-        { rank: 9, model: 'Deepseek_R1_7B_Qwen', scoreRange: '0.14 - 0.16', score: 0.15 },
-        { rank: 10, model: 'Deepseek_R1_1B_Owen', scoreRange: '0.10 - 0.12', score: 0.11 },
-        { rank: 11, model: 'Owen_1B_Instruct', scoreRange: '0.08 - 0.10', score: 0.09 },
-        { rank: 12, model: 'Deepseek_R1_8B_Llama', scoreRange: '0.04 - 0.06', score: 0.05 }
-    ];
+    if (lastUpdate && (now - parseInt(lastUpdate)) < cooldownPeriod) {
+        console.log('Statistics update skipped - cooldown period active');
+        return;
+    }
     
-    // Keep original order to show highest scores at the top
-    const chartData = [...modelData];
+    // Show loading indicator
+    showUpdateIndicator();
     
-    // Generate colors - special colors for top 3, gradient for others
-    const colors = chartData.map((item, index) => {
-        const originalRank = item.rank;
-        if (originalRank === 1) return '#d4af37'; // Gold
-        if (originalRank === 2) return '#C0C0C0'; // Silver
-        if (originalRank === 3) return '#cd7f32'; // Bronze
-        
-        // Gradient from blue to darker blue for remaining models
-        const intensity = 1 - (originalRank - 4) / 8;
-        const blue = Math.floor(64 + intensity * 64);
-        const green = Math.floor(128 + intensity * 64);
-        return `rgb(${blue}, ${green}, 255)`;
-    });
-    
-    const chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: chartData.map(item => `${item.rank}. ${item.model}`),
-            datasets: [{
-                label: 'Aggregated Mean Score',
-                data: chartData.map(item => item.score),
-                backgroundColor: colors,
-                borderColor: colors.map(color => color.replace('rgb', 'rgba').replace(')', ', 0.8)')),
-                borderWidth: 1,
-                barThickness: 40
-            }]
-        },
-        options: {
-            indexAxis: 'y', // This makes it horizontal
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(42, 42, 42, 0.95)',
-                    titleColor: '#ffffff',
-                    bodyColor: '#cccccc',
-                    borderColor: '#404040',
-                    borderWidth: 1,
-                    callbacks: {
-                        title: function(context) {
-                            const dataIndex = context[0].dataIndex;
-                            const item = chartData[dataIndex];
-                            return `#${item.rank} ${item.model}`;
-                        },
-                        label: function(context) {
-                            const dataIndex = context.dataIndex;
-                            const item = chartData[dataIndex];
-                            return `Score Range: ${item.scoreRange}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    max: 0.4,
-                    grid: {
-                        color: 'rgba(64, 64, 64, 0.3)'
-                    },
-                    ticks: {
-                        color: '#cccccc',
-                        font: {
-                            family: 'Inter, sans-serif'
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Aggregated Mean Score',
-                        color: '#ffffff',
-                        font: {
-                            family: 'Inter, sans-serif',
-                            size: 14,
-                            weight: '600'
-                        }
-                    }
-                },
-                y: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#cccccc',
-                        font: {
-                            family: 'Inter, sans-serif',
-                            size: 14
-                        },
-                        maxRotation: 0,
-                        callback: function(value, index) {
-                            const label = this.getLabelForValue(value);
-                            // Truncate long model names for mobile
-                            if (window.innerWidth < 768 && label.length > 25) {
-                                return label.substring(0, 22) + '...';
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 1500,
-                easing: 'easeOutQuart'
-            }
+    // Make AJAX call to update statistics
+    fetch('/api/update_statistics', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('Statistics updated successfully');
+            // Store the update timestamp
+            localStorage.setItem('stats_last_update', now.toString());
+            // Reload the page to show updated statistics
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            console.error('Statistics update failed:', data.message);
+            hideUpdateIndicator();
+        }
+    })
+    .catch(error => {
+        console.error('Error updating statistics:', error);
+        hideUpdateIndicator();
     });
-    
-    // Handle window resize for responsive behavior
-    window.addEventListener('resize', function() {
-        chart.update();
-    });
+}
+
+// Show update indicator
+function showUpdateIndicator() {
+    // Create or show loading indicator
+    let indicator = document.getElementById('stats-update-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'stats-update-indicator';
+        indicator.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--accent-blue);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-size: 14px;
+            ">
+                <span style="display: inline-block; margin-right: 8px;">🔄</span>
+                Updating statistics...
+            </div>
+        `;
+        document.body.appendChild(indicator);
+    }
+    indicator.style.display = 'block';
+}
+
+// Hide update indicator
+function hideUpdateIndicator() {
+    const indicator = document.getElementById('stats-update-indicator');
+    if (indicator) {
+        indicator.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-update statistics when page loads
+    updateStatisticsIfNeeded();
 });
 </script>
 {% endblock %}
